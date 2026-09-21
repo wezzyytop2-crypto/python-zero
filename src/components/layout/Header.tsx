@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { AchievementsModal } from '../common/AchievementsModal';
 import { DataManagementModal } from '../common/DataManagementModal';
 import { AuthModal } from '../auth/AuthModal';
+import { AITutorModal } from '../ai/AITutorModal';
 import { soundManager } from '../../core/sound/soundEffects';
 import { 
   Flame, 
@@ -37,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isAITutorOpen, setIsAITutorOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(() => soundManager.getMuted());
 
   const handleToggleSound = () => {
@@ -174,6 +176,20 @@ export const Header: React.FC<HeaderProps> = ({
             <Settings2 className="w-4 h-4" />
           </button>
 
+          {/* AI Tutor Button */}
+          <button
+            onClick={() => {
+              soundManager.playClick();
+              setIsAITutorOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl bg-[#58cc02]/10 dark:bg-[#58cc02]/20 border-2 border-b-4 border-[#58cc02]/40 text-[#46a302] dark:text-[#58cc02] hover:bg-[#58cc02]/25 transition-all shadow-xs active:translate-y-1 active:border-b-2 cursor-pointer"
+            title="Питончик AI — твой ИИ-тьютор на Google Gemini"
+          >
+            <span className="text-base select-none leading-none">🐍</span>
+            <span className="text-xs font-black hidden md:inline">Питончик AI</span>
+            <Sparkles className="w-3 h-3 fill-current hidden sm:inline" />
+          </button>
+
           {/* Dark/Light Theme Toggle */}
           <ThemeToggle />
 
@@ -258,6 +274,11 @@ export const Header: React.FC<HeaderProps> = ({
         onExport={exportProgress}
         onImport={importProgress}
         onReset={resetProgress}
+      />
+
+      <AITutorModal
+        isOpen={isAITutorOpen}
+        onClose={() => setIsAITutorOpen(false)}
       />
     </>
   );
