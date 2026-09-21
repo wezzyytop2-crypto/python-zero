@@ -128,28 +128,33 @@ export async function sendGeminiPrompt(
     `Вопрос ученика: ${prompt}`,
   ].filter(Boolean).join('\n\n');
 
-  // Candidate models: start with latest gemini-3.6-flash and standard variants
-  const initialCandidates = [
+  // Primary models to try
+  const candidateModels = Array.from(new Set([
     cachedWorkingModel,
     'gemini-3.6-flash',
     'gemini-2.0-flash',
-    'gemini-2.5-flash',
     'gemini-1.5-flash-latest',
-  ].filter(Boolean) as string[];
-
-  // Remove duplicates
-  const candidateModels = Array.from(new Set(initialCandidates));
+  ].filter(Boolean) as string[]));
 
   let lastApiError: string | null = null;
+  let isNetworkUnreachable = false;
 
   for (const model of candidateModels) {
+    if (isNetworkUnreachable) break;
+
     try {
       const cleanModel = model.startsWith('models/') ? model.replace('models/', '') : model;
+      
+      // Fast timeout (4 seconds) so the user doesn't wait forever if Google is blocked
+      const controller = new AbortController();
+      const timeoutTimer = setTimeout(() => controller.abort(), 4000);
+
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             systemInstruction: {
               parts: [{ text: SYSTEM_INSTRUCTION }]
@@ -168,10 +173,16 @@ export async function sendGeminiPrompt(
         }
       );
 
+      clearTimeout(timeoutTimer);
+
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         lastApiError = errData?.error?.message || `HTTP ${response.status}`;
         console.warn(`Gemini model ${cleanModel} error:`, errData);
+        // If it's a model not found (404), try next model. If geo-blocked or permission, stop.
+        if (response.status === 400 || response.status === 403) {
+          break;
+        }
         continue;
       }
 
@@ -182,63 +193,22 @@ export async function sendGeminiPrompt(
         return text;
       }
     } catch (e: any) {
-      lastApiError = e?.message || 'Сетевая ошибка';
+      // If it's Failed to fetch / aborted, Google is unreachable (e.g. Russia without VPN)
       console.warn(`Network error with model ${model}:`, e);
+      isNetworkUnreachable = true;
+      lastApiError = 'Failed to fetch (требуется VPN для серверов Google)';
+      break; // Don't hang on 4 more calls
     }
   }
 
-  // If candidate models all failed, dynamically query ListModels to find which model this key has access to!
-  try {
-    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-    if (listRes.ok) {
-      const listData = await listRes.json();
-      const availableModels: string[] = (listData.models || [])
-        .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
-        .map((m: any) => m.name.replace('models/', ''));
-
-      // Sort flash models to the top
-      availableModels.sort((a, b) => {
-        if (a.includes('flash') && !b.includes('flash')) return -1;
-        if (!a.includes('flash') && b.includes('flash')) return 1;
-        return 0;
-      });
-
-      for (const model of availableModels) {
-        if (candidateModels.includes(model)) continue; // Already tried
-
-        try {
-          const res = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-                contents: [{ role: 'user', parts: [{ text: userContent }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 1000 },
-              }),
-            }
-          );
-
-          if (res.ok) {
-            const data = await res.json();
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              cachedWorkingModel = model;
-              return text;
-            }
-          }
-        } catch {
-          // ignore and try next
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('Failed to dynamically query models:', e);
+  // If network is completely unreachable (Failed to fetch), deliver instant smart response + helpful note
+  if (isNetworkUnreachable) {
+    const offlineReply = generateSmartOfflineResponse(prompt, context);
+    return `${offlineReply}\n\n---\n> 💡 *Примечание: Серверы Google AI Studio недоступны из вашего региона без VPN (\`Failed to fetch\`). Ответ сгенерирован встроенным экспресс-помощником. При включённом VPN Питончик подключится напрямую к нейросети Google.*`;
   }
 
-  // If we have an actual API key error (e.g. invalid key, quota, blocked), show it clearly!
-  if (lastApiError && lastApiError.includes('API_KEY_INVALID')) {
+  // If we have an invalid key error
+  if (lastApiError && (lastApiError.includes('API_KEY_INVALID') || lastApiError.includes('API key not valid'))) {
     return `🐍 **Ошибка ключа Gemini API:**\n\nGoogle сообщил, что введённый API-ключ недействителен (\`API_KEY_INVALID\`).\n\nПожалуйста, нажмите на иконку шестерёнки **⚙️** в углу окна и проверьте, скопировали ли вы весь ключ целиком с [Google AI Studio](https://aistudio.google.com/app/apikey).`;
   }
 
