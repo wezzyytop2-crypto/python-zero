@@ -1,6 +1,6 @@
 /**
  * Client for Google Gemini API and Offline Smart AI Tutor
- * Supports Gemini 1.5/2.5 Flash via REST API without heavy external dependencies.
+ * Supports Gemini 3.6/2.5/2.0 Flash via REST API with automatic model discovery.
  */
 
 export interface AIMessage {
@@ -33,28 +33,49 @@ const SYSTEM_INSTRUCTION = `
 Твоя миссия — объяснять основы языка Python для новичков простым, понятным и увлекательным языком.
 
 Правила общения:
-1. НЕ давай сразу готовый код решения целиком, если тебя прямо об этом не попросили. Направляй ученика наводящими вопросами или псевдокодом.
-2. Если у ученика ошибка (SyntaxError, IndentationError, NameError, TypeError, IndexError и т.д.):
+1. Отвечай прямо на вопрос ученика! Будь дружелюбным, используй уместный юмор и эмодзи (🐍, 💡, ✨, 🚀, 🎯).
+2. Выделяй код и ключевые слова в обратные кавычки (например: \`print()\`, \`int\`, \`if/else\`), а блоки кода в \`\`\`python ... \`\`\`.
+3. Если ученик спрашивает «как вывести привет мир», сразу покажи пример с \`print("Привет, мир!")\` и объясни, зачем нужны кавычки и скобки.
+4. Если у ученика ошибка в коде:
    - Объясни человеческим языком, что эта ошибка значит на простом жизненном примере.
-   - Укажи, на какую строку или символ обратить внимание (например: забыл двоеточие ':', перепутал отступы, не закрыл кавычку).
-3. Используй стиль Duolingo: будь позитивным, поддерживающим, используй уместные эмодзи (🐍, 💡, ✨, 🚀, 🎯), форматируй ключевые слова и кусочки кода в обратные кавычки (например: \`print()\`, \`int\`, \`if/else\`).
-4. Отвечай на чистом русском языке. Держи ответы структурированными и не слишком длинными.
+   - Укажи, на какую строку или символ обратить внимание.
+5. Не давай сразу громоздкие решения олимпиадных задач целиком, если можно направить подсказкой, но на конкретные вопросы всегда давай понятный точный ответ.
+6. Отвечай на чистом русском языке.
 `;
 
 /**
- * Fallback smart heuristic offline analysis when API key is not yet set
+ * Fallback smart heuristic responses when offline or without API key
  */
 const generateSmartOfflineResponse = (
   prompt: string,
   context?: { code?: string; error?: string; taskTitle?: string }
 ): string => {
+  const p = prompt.toLowerCase();
   const code = context?.code || '';
   const error = context?.error || '';
 
+  // Specific common questions
+  if (p.includes('привет мир') || p.includes('вывести') || p.includes('печать') || p.includes('print')) {
+    return `🐍 **Чтобы вывести текст на экран в Python, используется функция \`print()\`:**\n\n\`\`\`python\nprint("Привет, мир!")\n\`\`\`\n\n💡 **Важные правила:**\n1. Текст всегда оборачивается в кавычки: \`"..."\` или \`'...\'\`.\n2. Скобки \`()\` обязательны — они говорят Python выполнить функцию!\n3. Числа можно выводить без кавычек: \`print(42)\`.`;
+  }
+
+  if (p.includes('переменн') || p.includes('сохранить значение')) {
+    return `🐍 **Переменная — это как коробочка с подписанным именем!**\n\nСоздаётся с помощью знака равно \`=\`:\n\`\`\`python\nscore = 100\nname = "Питончик"\nprint(name, score)\n\`\`\``;
+  }
+
+  if (p.includes('цикл') || p.includes('повтор') || p.includes('for') || p.includes('while')) {
+    return `🐍 **Циклы позволяют повторять действия много раз!**\n\nПример цикла \`for\`:\n\`\`\`python\nfor i in range(3):\n    print("Питончик лучший!")\n\`\`\`\n\n💡 Не забывай ставить двоеточие \`:\` в конце строки и отступ в 4 пробела внутри цикла!`;
+  }
+
+  if (p.includes('услови') || p.includes('если') || p.includes('if')) {
+    return `🐍 **Условия проверяют, истинно ли утверждение:**\n\n\`\`\`python\nx = 10\nif x > 5:\n    print("Число больше пяти!")\nelse:\n    print("Число меньше или равно пяти")\n\`\`\``;
+  }
+
+  // Error inspection
   if (error) {
     if (error.includes('SyntaxError')) {
       if (error.includes("':' expected") || error.includes("expected ':'")) {
-        return `🐍 **Ой, кажется, синтаксическая ошибка!**\n\nВ Python после операторов \`if\`, \`for\`, \`while\` или объявления функции \`def\` **всегда нужно ставить двоеточие \`:\`** в конце строки!\n\n💡 *Проверь конец строки с условием или циклом.*`;
+        return `🐍 **Синтаксическая ошибка (SyntaxError)!**\n\nВ Python после операторов \`if\`, \`for\`, \`while\` или объявления функции \`def\` **всегда нужно ставить двоеточие \`:\`** в конце строки!\n\n💡 *Проверь конец строки с условием или циклом.*`;
       }
       if (error.includes('unterminated string')) {
         return `🐍 **Кавычка потерялась!**\n\nТы открыл строчку кавычкой \`"\` или \`'\`, но где-то забыл её закрыть. Проверь текст в скобках \`print(...)\`!`;
@@ -80,15 +101,14 @@ const generateSmartOfflineResponse = (
     return `🐍 **Подсказка от Питончика:**\n\nВ Python 3 функция \`print\` всегда пишется со круглыми скобками:\n\`\`\`python\nprint("Привет, мир!")\n\`\`\``;
   }
 
-  if (prompt.toLowerCase().includes('ошибк') || prompt.toLowerCase().includes('не работает')) {
-    return `🐍 **Питончик на связи!**\n\nЧтобы я помог найти неточность:\n1. Проверь скобки и кавычки — все ли закрыты?\n2. Проверь отступы после двоеточий.\n3. Если у тебя есть свой бесплатный **Gemini API Key**, укажи его по иконке ⚙️ в углу окна, и я смогу делать глубокий ИИ-анализ твоего решения в реальном времени! 🚀`;
-  }
-
-  return `🐍 **Привет! Я Питончик — твой ИИ-наставник!** 🚀\n\nЯ могу:\n- 🔍 Найти ошибку в твоём коде\n- 💡 Дать подсказку к текущему уроку\n- 📝 Объяснить сложные темы на простых примерах\n\n*Задай мне любой вопрос по коду или выбери быструю подсказку ниже!*`;
+  return `🐍 **Питончик на связи!** 🚀\n\nТы спросил: *«${prompt}»*\n\nНапиши мне, что именно ты хочешь сделать на Python, или нажми на одну из кнопок подсказок внизу (например, **«Подсказка без спойлера»** или **«Пример из жизни»**)!`;
 };
 
+// Cached working model name across user sessions
+let cachedWorkingModel: string | null = null;
+
 /**
- * Call Gemini API or fallback
+ * Call Gemini API with automatic model discovery and fallback
  */
 export async function sendGeminiPrompt(
   prompt: string,
@@ -97,7 +117,6 @@ export async function sendGeminiPrompt(
   const apiKey = getStoredGeminiKey();
 
   if (!apiKey) {
-    // Return friendly offline/mock tutor analysis
     return generateSmartOfflineResponse(prompt, context);
   }
 
@@ -109,12 +128,25 @@ export async function sendGeminiPrompt(
     `Вопрос ученика: ${prompt}`,
   ].filter(Boolean).join('\n\n');
 
-  const models = ['gemini-2.5-flash', 'gemini-1.5-flash'];
+  // Candidate models: start with latest gemini-3.6-flash and standard variants
+  const initialCandidates = [
+    cachedWorkingModel,
+    'gemini-3.6-flash',
+    'gemini-2.0-flash',
+    'gemini-2.5-flash',
+    'gemini-1.5-flash-latest',
+  ].filter(Boolean) as string[];
 
-  for (const model of models) {
+  // Remove duplicates
+  const candidateModels = Array.from(new Set(initialCandidates));
+
+  let lastApiError: string | null = null;
+
+  for (const model of candidateModels) {
     try {
+      const cleanModel = model.startsWith('models/') ? model.replace('models/', '') : model;
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -138,21 +170,78 @@ export async function sendGeminiPrompt(
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        console.warn(`Gemini model ${model} error:`, errData);
-        // Try next model if available
+        lastApiError = errData?.error?.message || `HTTP ${response.status}`;
+        console.warn(`Gemini model ${cleanModel} error:`, errData);
         continue;
       }
 
       const data = await response.json();
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) {
+        cachedWorkingModel = cleanModel;
         return text;
       }
-    } catch (e) {
+    } catch (e: any) {
+      lastApiError = e?.message || 'Сетевая ошибка';
       console.warn(`Network error with model ${model}:`, e);
     }
   }
 
-  // Fallback to smart offline if network or quota issue occurred
+  // If candidate models all failed, dynamically query ListModels to find which model this key has access to!
+  try {
+    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+    if (listRes.ok) {
+      const listData = await listRes.json();
+      const availableModels: string[] = (listData.models || [])
+        .filter((m: any) => m.supportedGenerationMethods?.includes('generateContent'))
+        .map((m: any) => m.name.replace('models/', ''));
+
+      // Sort flash models to the top
+      availableModels.sort((a, b) => {
+        if (a.includes('flash') && !b.includes('flash')) return -1;
+        if (!a.includes('flash') && b.includes('flash')) return 1;
+        return 0;
+      });
+
+      for (const model of availableModels) {
+        if (candidateModels.includes(model)) continue; // Already tried
+
+        try {
+          const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+                contents: [{ role: 'user', parts: [{ text: userContent }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 1000 },
+              }),
+            }
+          );
+
+          if (res.ok) {
+            const data = await res.json();
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) {
+              cachedWorkingModel = model;
+              return text;
+            }
+          }
+        } catch {
+          // ignore and try next
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to dynamically query models:', e);
+  }
+
+  // If we have an actual API key error (e.g. invalid key, quota, blocked), show it clearly!
+  if (lastApiError && lastApiError.includes('API_KEY_INVALID')) {
+    return `🐍 **Ошибка ключа Gemini API:**\n\nGoogle сообщил, что введённый API-ключ недействителен (\`API_KEY_INVALID\`).\n\nПожалуйста, нажмите на иконку шестерёнки **⚙️** в углу окна и проверьте, скопировали ли вы весь ключ целиком с [Google AI Studio](https://aistudio.google.com/app/apikey).`;
+  }
+
+  // Smart offline fallback
   return generateSmartOfflineResponse(prompt, context);
 }
