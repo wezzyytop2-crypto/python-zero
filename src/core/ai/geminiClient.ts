@@ -158,9 +158,9 @@ export async function sendGeminiPrompt(
     try {
       const cleanModel = model.startsWith('models/') ? model.replace('models/', '') : model;
       
-      // Generous timeout (12 seconds) for LLM generation
+      // Generous timeout (30 seconds) so generation never gets killed prematurely
       const controller = new AbortController();
-      const timeoutTimer = setTimeout(() => controller.abort(), 12000);
+      const timeoutTimer = setTimeout(() => controller.abort(), 30000);
 
       const baseUrl = getBaseUrl();
       const response = await fetch(
@@ -182,6 +182,9 @@ export async function sendGeminiPrompt(
             generationConfig: {
               temperature: 0.7,
               maxOutputTokens: 1000,
+              thinkingConfig: {
+                thinkingBudget: 0,
+              },
             }
           }),
         }
@@ -200,7 +203,10 @@ export async function sendGeminiPrompt(
       }
 
       const data = await response.json();
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const candidate = data?.candidates?.[0];
+      const parts = candidate?.content?.parts || [];
+      // Combine text parts (ignoring any thought-only blocks)
+      const text = parts.map((p: any) => p.text).filter(Boolean).join('\n').trim();
       if (text) {
         cachedWorkingModel = cleanModel;
         return text;
