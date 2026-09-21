@@ -154,9 +154,9 @@ export async function sendGeminiPrompt(
     try {
       const cleanModel = model.startsWith('models/') ? model.replace('models/', '') : model;
       
-      // Fast timeout (4 seconds) so the user doesn't wait forever if Google is blocked
+      // Generous timeout (12 seconds) for LLM generation
       const controller = new AbortController();
-      const timeoutTimer = setTimeout(() => controller.abort(), 4000);
+      const timeoutTimer = setTimeout(() => controller.abort(), 12000);
 
       const baseUrl = getBaseUrl();
       const response = await fetch(
