@@ -8,6 +8,7 @@ interface AuthContextType extends AuthSession {
   signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error: string | null; needsConfirmation?: boolean }>;
   signInWithPhone: (phone: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, token: string) => Promise<{ error: string | null }>;
+  signInWithApple: () => Promise<{ error: string | null }>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
@@ -210,6 +211,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: null };
   };
 
+  // Sign In with Apple (OAuth)
+  const signInWithApple = async () => {
+    setError(null);
+    if (!isSupabaseConfigured || !supabase) {
+      const mockProfile: UserProfile = {
+        id: 'apple-' + Date.now(),
+        email: 'alex@icloud.com',
+        fullName: 'Apple ID Пользователь',
+      };
+      setUser(mockProfile);
+      localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(mockProfile));
+      return { error: null };
+    }
+
+    const { error: authErr } = await supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
+
+    if (authErr) {
+      setError(authErr.message);
+      return { error: authErr.message };
+    }
+
+    return { error: null };
+  };
+
   // Reset Password
   const resetPassword = async (email: string) => {
     setError(null);
@@ -253,6 +283,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signUpWithEmail,
         signInWithPhone,
         verifyOtp,
+        signInWithApple,
         resetPassword,
         signOut,
       }}
