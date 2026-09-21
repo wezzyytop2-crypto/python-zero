@@ -8,7 +8,7 @@ interface AuthContextType extends AuthSession {
   signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error: string | null; needsConfirmation?: boolean }>;
   signInWithPhone: (phone: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, token: string) => Promise<{ error: string | null }>;
-  signInWithApple: () => Promise<{ error: string | null }>;
+  signInWithGoogle: () => Promise<{ error: string | null }>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
@@ -211,14 +211,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: null };
   };
 
-  // Sign In with Apple (OAuth)
-  const signInWithApple = async () => {
+  // Sign In with Google (OAuth)
+  const signInWithGoogle = async () => {
     setError(null);
     if (!isSupabaseConfigured || !supabase) {
       const mockProfile: UserProfile = {
-        id: 'apple-' + Date.now(),
-        email: 'alex@icloud.com',
-        fullName: 'Apple ID Пользователь',
+        id: 'google-' + Date.now(),
+        email: 'alex@gmail.com',
+        fullName: 'Google Пользователь',
       };
       setUser(mockProfile);
       localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(mockProfile));
@@ -226,7 +226,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const { error: authErr } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
+      provider: 'google',
       options: {
         redirectTo: window.location.origin,
       },
@@ -283,7 +283,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signUpWithEmail,
         signInWithPhone,
         verifyOtp,
-        signInWithApple,
+        signInWithGoogle,
         resetPassword,
         signOut,
       }}

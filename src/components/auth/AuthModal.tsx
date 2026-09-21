@@ -31,7 +31,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     signUpWithEmail, 
     signInWithPhone, 
     verifyOtp, 
-    signInWithApple,
+    signInWithGoogle,
     resetPassword,
     isConfigured 
   } = useAuth();
@@ -53,12 +53,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleAppleSignIn = async () => {
+  const handleGoogleSignIn = async () => {
     soundManager.playClick();
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const { error } = await signInWithApple();
+      const { error } = await signInWithGoogle();
       if (error) {
         setErrorMessage(error);
         soundManager.playError();
@@ -67,7 +67,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClose();
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Ошибка входа через Apple');
+      setErrorMessage(err.message || 'Ошибка входа через Google');
       soundManager.playError();
     } finally {
       setIsLoading(false);
@@ -263,19 +263,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Apple 1-click OAuth Button */}
+        {/* Google 1-click OAuth Button */}
         {mode !== 'verify_otp' && mode !== 'forgot' && (
           <div className="px-5 pt-3">
             <button
               type="button"
-              onClick={handleAppleSignIn}
+              onClick={handleGoogleSignIn}
               disabled={isLoading}
-              className="btn-3d w-full py-3 px-4 rounded-2xl bg-black hover:bg-neutral-900 text-white border-2 border-b-4 border-neutral-950 text-xs sm:text-sm font-black flex items-center justify-center gap-2.5 shadow-md active:translate-y-1 transition-all"
+              className="btn-3d btn-3d-neutral w-full py-3 px-4 rounded-2xl border-2 border-b-4 border-[#e5e5e5] dark:border-[#37464f] text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-black flex items-center justify-center gap-2.5 shadow-sm active:translate-y-1 transition-all"
             >
-              <svg className="w-4 h-4 fill-white mb-0.5 shrink-0" viewBox="0 0 170 170">
-                <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.07-7.66-7.85-11.88-14.34-6.3-9.7-11.28-20.91-14.94-33.64-3.66-12.73-5.49-24.3-5.49-34.71 0-14.07 3.5-25.96 10.5-35.69 7-9.73 16-14.7 27-14.9 5.09 0 10.74 1.34 16.94 4.02 6.2 2.68 10.37 4.08 12.51 4.2 1.83 0 5.86-1.39 12.09-4.17 6.23-2.78 11.73-4.05 16.5-3.82 12.63.63 22.84 5.37 30.63 14.22-11.07 6.72-16.48 15.93-16.23 27.63.26 9.3 3.96 17.15 11.11 23.54 7.15 6.39 15.64 10.15 25.48 11.28-2.3 7.02-5.19 14.54-8.66 22.56zM119.22 33.15c0-7.29 2.67-14.15 8-20.58 5.33-6.43 11.89-10.79 19.68-13.08.31 1.25.47 2.47.47 3.66 0 7.21-2.8 14.28-8.4 21.2-5.6 6.92-12.28 11.11-20.03 12.56-.2-.93-.31-1.89-.31-2.88l.59-.88z" />
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
               </svg>
-              <span>Продолжить с Apple</span>
+              <span>Продолжить с Google</span>
             </button>
 
             <div className="flex items-center gap-3 mt-3.5 mb-1">
