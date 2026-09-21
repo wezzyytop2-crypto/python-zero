@@ -13,12 +13,14 @@ export interface AIMessage {
 const STORAGE_KEY = 'python_zero_gemini_key';
 
 export const getStoredGeminiKey = (): string => {
-  return localStorage.getItem(STORAGE_KEY) || import.meta.env.VITE_GEMINI_API_KEY || '';
+  const raw = localStorage.getItem(STORAGE_KEY) || import.meta.env.VITE_GEMINI_API_KEY || '';
+  return raw.trim().replace(/^["']|["']$/g, '');
 };
 
 export const setStoredGeminiKey = (key: string): void => {
-  if (key.trim()) {
-    localStorage.setItem(STORAGE_KEY, key.trim());
+  const cleanKey = key.trim().replace(/^["']|["']$/g, '');
+  if (cleanKey) {
+    localStorage.setItem(STORAGE_KEY, cleanKey);
   } else {
     localStorage.removeItem(STORAGE_KEY);
   }
@@ -26,6 +28,13 @@ export const setStoredGeminiKey = (key: string): void => {
 
 export const hasGeminiKey = (): boolean => {
   return Boolean(getStoredGeminiKey());
+};
+
+const getBaseUrl = (): string => {
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return '/api/gemini';
+  }
+  return 'https://generativelanguage.googleapis.com';
 };
 
 const SYSTEM_INSTRUCTION = `
@@ -149,8 +158,9 @@ export async function sendGeminiPrompt(
       const controller = new AbortController();
       const timeoutTimer = setTimeout(() => controller.abort(), 4000);
 
+      const baseUrl = getBaseUrl();
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${apiKey}`,
+        `${baseUrl}/v1beta/models/${cleanModel}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -179,7 +189,6 @@ export async function sendGeminiPrompt(
         const errData = await response.json().catch(() => ({}));
         lastApiError = errData?.error?.message || `HTTP ${response.status}`;
         console.warn(`Gemini model ${cleanModel} error:`, errData);
-        // If it's a model not found (404), try next model. If geo-blocked or permission, stop.
         if (response.status === 400 || response.status === 403) {
           break;
         }
@@ -193,18 +202,16 @@ export async function sendGeminiPrompt(
         return text;
       }
     } catch (e: any) {
-      // If it's Failed to fetch / aborted, Google is unreachable (e.g. Russia without VPN)
       console.warn(`Network error with model ${model}:`, e);
       isNetworkUnreachable = true;
-      lastApiError = 'Failed to fetch (требуется VPN для серверов Google)';
-      break; // Don't hang on 4 more calls
+      lastApiError = e?.message || 'Network error';
+      break;
     }
   }
 
-  // If network is completely unreachable (Failed to fetch), deliver instant smart response + helpful note
+  // If network is unreachable or blocked by browser extensions, deliver smart instant answer
   if (isNetworkUnreachable) {
-    const offlineReply = generateSmartOfflineResponse(prompt, context);
-    return `${offlineReply}\n\n---\n> 💡 *Примечание: Серверы Google AI Studio недоступны из вашего региона без VPN (\`Failed to fetch\`). Ответ сгенерирован встроенным экспресс-помощником. При включённом VPN Питончик подключится напрямую к нейросети Google.*`;
+    return generateSmartOfflineResponse(prompt, context);
   }
 
   // If we have an invalid key error
