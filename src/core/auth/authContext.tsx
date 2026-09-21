@@ -133,6 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: null, needsConfirmation: false };
     }
 
+    const currentRedirectUrl = window.location.origin + window.location.pathname;
+
     const { data, error: authErr } = await supabase.auth.signUp({
       email,
       password,
@@ -140,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         data: {
           full_name: fullName,
         },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: currentRedirectUrl,
       },
     });
 
@@ -225,10 +227,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: null };
     }
 
+    const currentRedirectUrl = window.location.origin + window.location.pathname;
+
     const { error: authErr } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: currentRedirectUrl,
       },
     });
 
@@ -247,8 +251,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: null };
     }
 
+    const currentRedirectUrl = window.location.origin + window.location.pathname;
+
     const { error: authErr } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/#reset-password`,
+      redirectTo: `${currentRedirectUrl}#reset-password`,
     });
 
     if (authErr) {
