@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { ThemeToggle } from '../common/ThemeToggle';
 import type { CourseManifest } from '../../types/course';
 import { useLessonProgress } from '../../hooks/useLessonProgress';
+import { useAuth } from '../../hooks/useAuth';
 import { AchievementsModal } from '../common/AchievementsModal';
 import { DataManagementModal } from '../common/DataManagementModal';
+import { AuthModal } from '../auth/AuthModal';
 import { soundManager } from '../../core/sound/soundEffects';
 import { 
   Flame, 
@@ -13,7 +15,10 @@ import {
   Volume2, 
   VolumeX, 
   Sparkles,
-  GraduationCap
+  GraduationCap,
+  LogIn,
+  LogOut,
+  Check
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -26,9 +31,12 @@ export const Header: React.FC<HeaderProps> = ({
   manifest,
   onToggleSidebar,
 }) => {
+  const { user, signOut } = useAuth();
   const { progress, totalXP, unlockedAchievementsCount, exportProgress, importProgress, resetProgress } = useLessonProgress();
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(() => soundManager.getMuted());
 
   const handleToggleSound = () => {
@@ -168,10 +176,76 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Dark/Light Theme Toggle */}
           <ThemeToggle />
+
+          {/* Auth Button or User Profile Avatar */}
+          {!user ? (
+            <button
+              onClick={() => {
+                soundManager.playClick();
+                setIsAuthModalOpen(true);
+              }}
+              className="btn-3d btn-3d-green flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-2xl text-white text-xs font-black"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Войти</span>
+            </button>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => {
+                  soundManager.playClick();
+                  setIsProfileMenuOpen(prev => !prev);
+                }}
+                className="flex items-center gap-2 p-1 pl-2 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-4 border-[#e5e5e5] dark:border-[#37464f] hover:border-[#58cc02] transition-all select-none"
+              >
+                <span className="text-xs font-black text-slate-800 dark:text-white max-w-[90px] sm:max-w-[120px] truncate hidden sm:inline">
+                  {user.fullName || user.email?.split('@')[0] || 'Профиль'}
+                </span>
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-[#58cc02] to-[#46a302] text-white font-black text-xs flex items-center justify-center border-b-2 border-[#378202] shadow-xs">
+                  {user.fullName ? user.fullName[0].toUpperCase() : user.email ? user.email[0].toUpperCase() : '🐍'}
+                </div>
+              </button>
+
+              {/* Profile Dropdown */}
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#1f2e35] border-2 border-b-4 border-[#e5e5e5] dark:border-[#37464f] shadow-xl p-3 z-50 animate-pop-in space-y-2">
+                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#131f24] border border-slate-200/80 dark:border-slate-800">
+                    <div className="text-xs font-black text-slate-900 dark:text-white truncate">
+                      {user.fullName || 'Пользователь'}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                      {user.email || user.phone}
+                    </div>
+                    <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#58cc02]">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                      <span>Облачная синхронизация активна</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      soundManager.playClick();
+                      setIsProfileMenuOpen(false);
+                      signOut();
+                    }}
+                    className="w-full flex items-center gap-2 p-2 rounded-xl text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Выйти из аккаунта</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </header>
 
       {/* Modals */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+
       <AchievementsModal
         isOpen={isAchievementsOpen}
         onClose={() => setIsAchievementsOpen(false)}

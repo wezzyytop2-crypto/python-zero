@@ -2,6 +2,7 @@ import { useCourseManifest } from './hooks/useCourseManifest';
 import { MainLayout } from './components/layout/MainLayout';
 import { QuizView } from './components/tasks/QuizView';
 import { TaskContainer } from './components/tasks/TaskContainer';
+import { AuthProvider } from './core/auth/authContext';
 
 export function App() {
   const {
@@ -31,33 +32,35 @@ export function App() {
   };
 
   return (
-    <MainLayout
-      manifest={manifest}
-      currentLessonId={currentLessonId}
-      lessonData={lessonData}
-      isLoadingLesson={isLoadingLesson}
-      onSelectLesson={selectLesson}
-      onNextLesson={handleNext}
-      onPrevLesson={handlePrev}
-      hasNextLesson={!!nextId}
-      hasPrevLesson={!!prevId}
-      onRunExample={handleRunExample}
-      renderTasksArea={(activeTaskIndex, onSelectTaskIndex, onGoToQuiz) => (
-        <TaskContainer
-          tasks={lessonData?.tasks || []}
-          lessonId={currentLessonId}
-          activeTaskIndex={activeTaskIndex}
-          onSelectTaskIndex={onSelectTaskIndex}
-          onGoToQuiz={onGoToQuiz}
-        />
-      )}
-      renderQuizArea={() => (
-        <QuizView
-          questions={lessonData?.quiz || []}
-          lessonId={currentLessonId}
-        />
-      )}
-    />
+    <AuthProvider>
+      <MainLayout
+        manifest={manifest}
+        currentLessonId={currentLessonId}
+        lessonData={lessonData}
+        isLoadingLesson={isLoadingLesson}
+        onSelectLesson={selectLesson}
+        onNextLesson={handleNext}
+        onPrevLesson={handlePrev}
+        hasNextLesson={!!nextId}
+        hasPrevLesson={!!prevId}
+        onRunExample={handleRunExample}
+        renderTasksArea={(activeTaskIndex, onSelectTaskIndex, onGoToQuiz) => (
+          <TaskContainer
+            tasks={lessonData?.tasks || []}
+            lessonId={currentLessonId}
+            activeTaskIndex={activeTaskIndex}
+            onSelectTaskIndex={onSelectTaskIndex}
+            onGoToQuiz={onGoToQuiz}
+          />
+        )}
+        renderQuizArea={() => (
+          <QuizView
+            questions={lessonData?.quiz || []}
+            lessonId={currentLessonId}
+          />
+        )}
+      />
+    </AuthProvider>
   );
 }
 
