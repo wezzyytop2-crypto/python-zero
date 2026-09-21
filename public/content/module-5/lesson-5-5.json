@@ -1,0 +1,222 @@
+{
+  "id": "lesson-5-5",
+  "moduleId": "module-5",
+  "title": "Перебор списков в цикле for",
+  "description": "Как обойти все элементы списка: прямой перебор for item in items, перебор по индексам с range(len()), нумерация с enumerate() и правильное изменение элементов в цикле.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265100/step/1",
+
+  "theoryMarkdown": "# Цикл + Список: Идеальная пара\n\nСписки и цикл `for` буквально созданы друг для друга. В отличие от других языков программирования, где нужно считать индексы, в Python цикл `for` умеет **напрямую доставать элементы из списка** один за другим!\n\n---\n\n## 1. Прямой перебор: `for item in items:`\n\nСамый частый и красивый способ обойти список:\n```python\nfruits = [\"яблоко\", \"банан\", \"киви\"]\n\nfor fruit in fruits:\n    print(f\"Я люблю {fruit}!\")\n```\nНа каждой итерации переменная `fruit` автоматически принимает значение очередного элемента. Никаких индексов!\n\n---\n\n## 2. Когда нужны индексы: `for i in range(len(lst)):`\n\nЕсли вам нужно **изменить элементы списка на месте** или знать точный номер элемента, используйте перебор по индексам:\n```python\nnumbers = [1, 2, 3, 4]\n\nfor i in range(len(numbers)):\n    numbers[i] = numbers[i] * 10  # Изменяем список по индексу!\n\nprint(numbers)  # [10, 20, 30, 40]\n```\n\n> ⚠️ **Частая ошибка:**\n> Если написать `for x in numbers: x = x * 10`, список `numbers` **НЕ изменится**! Переменная `x` — это лишь временная копия значения. Чтобы изменить список, нужно обращаться именно по индексу: `numbers[i] = ...`.\n\n---\n\n## 3. Функция `enumerate()`: и индекс, и значение сразу!\n\nЕсли нужно напечатать красивый нумерованный список, в Python есть волшебная функция `enumerate()`:\n```python\ntasks = [\"Купить хлеб\", \"Полить цветы\", \"Почитать книгу\"]\n\nfor index, task in enumerate(tasks, start=1):\n    print(f\"{index}. {task}\")\n# 1. Купить хлеб\n# 2. Полить цветы\n# 3. Почитать книгу\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-5-5-1",
+      "title": "Пример 1: Подсчёт суммы положительных чисел",
+      "description": "Обходим список и накапливаем сумму только подходящих элементов.",
+      "code": "nums = [10, -5, 20, -1, 30]\ntotal = 0\nfor x in nums:\n    if x > 0:\n        total += x\nprint(\"Сумма положительных:\", total)"
+    },
+    {
+      "id": "ex-5-5-2",
+      "title": "Пример 2: Нумерация призёров с enumerate",
+      "description": "Получаем место и имя участника одновременно.",
+      "code": "winners = [\"Алиса\", \"Борис\", \"Вероника\"]\nfor place, name in enumerate(winners, start=1):\n    print(f\"{place} место: {name} 🏆\")"
+    },
+    {
+      "id": "ex-5-5-3",
+      "title": "Пример 3: Фильтрация в новый список",
+      "description": "Отбираем только короткие слова в отдельный список.",
+      "code": "words = [\"кот\", \"программирование\", \"дом\", \"алгоритм\", \"чай\"]\nshort_words = []\nfor w in words:\n    if len(w) <= 3:\n        short_words.append(w)\nprint(\"Короткие слова:\", short_words)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "nums = [1, 2, 3]\nfor x in nums:\n    x = x * 2\nprint(nums)  # Числа остались [1, 2, 3]!",
+      "errorType": "ModifyingLoopVariable",
+      "explanation": "Изменение переменной x внутри 'for x in nums' не влияет на исходный список. Чтобы перезаписать элементы списка, используйте индексы: 'for i in range(len(nums)): nums[i] *= 2'.",
+      "fixCode": "nums = [1, 2, 3]\nfor i in range(len(nums)):\n    nums[i] = nums[i] * 2\nprint(nums)  # [2, 4, 6]"
+    },
+    {
+      "mistakeCode": "for i in range(len(lst) + 1):\n    print(lst[i])",
+      "errorType": "IndexError",
+      "explanation": "range(len(lst) + 1) на последнем шаге попытается обратиться к индексу len(lst), которого не существует! Пишите просто range(len(lst)).",
+      "fixCode": "for i in range(len(lst)):\n    print(lst[i])"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-5-5-1",
+      "question": "Какая конструкция позволяет обойти все элементы списка items без использования индексов?",
+      "options": ["for item in items:", "while items:", "for i in range(items):", "loop items:"],
+      "correctIndices": [0],
+      "explanation": "Синтаксис 'for item in items:' перебирает каждый элемент списка напрямую."
+    },
+    {
+      "id": "q-5-5-2",
+      "question": "Что возвращает функция enumerate(lst, start=1) на каждом шаге цикла?",
+      "options": [
+        "Пару: порядковый номер (начиная с 1) и сам элемент",
+        "Только длину списка",
+        "Только индексы без элементов",
+        "Отсортированный список"
+      ],
+      "correctIndices": [0],
+      "explanation": "enumerate возвращает кортеж из двух значений: текущий счётчик и соответствующий элемент списка."
+    },
+    {
+      "id": "q-5-5-3",
+      "question": "Почему код 'for x in nums: x = x * 2' не удваивает элементы списка nums?",
+      "options": [
+        "Переменная x — это копия значения, а не ссылка на ячейку списка",
+        "В Python нельзя умножать числа в цикле",
+        "Потому что список чисел неизменяем",
+        "Потому что пропущен break"
+      ],
+      "correctIndices": [0],
+      "explanation": "Переменная цикла x получает копию значения элемента; изменение переменной x никак не отражается на содержимом исходного списка nums."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-5-5-1",
+      "type": "code",
+      "title": "Задание 1: Фильтр чётных чисел",
+      "instruction": "Программа считывает целые числа, записанные в одну строку через пробел.\nС помощью цикла `for` выведите только **чётные** числа из этого списка, каждое на отдельной строке.\n\n*Пример ввода:*\n`1 4 7 8 10 13`\n*Вывод:*\n`4`\n`8`\n`10`",
+      "difficulty": "easy",
+      "starterCode": "# Разбейте входную строку на числа и выведите только чётные\n",
+      "solutionCode": "line = input().split()\nfor item in line:\n    num = int(item)\n    if num % 2 == 0:\n        print(num)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Разбейте строку на строковые элементы: items = input().split().",
+        "Обойдите элементы: for item in items:",
+        "Преобразуйте число: num = int(item).",
+        "Если num % 2 == 0: напечатайте print(num)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-5-1-1",
+          "stdin": "1 4 7 8 10 13\n",
+          "expectedStdout": "4\n8\n10\n",
+          "description": "Смешанный набор чисел",
+          "isHidden": false
+        },
+        {
+          "id": "tc-5-5-1-2",
+          "stdin": "2 4 6\n",
+          "expectedStdout": "2\n4\n6\n",
+          "description": "Все числа чётные",
+          "isHidden": false
+        },
+        {
+          "id": "tc-5-5-1-3",
+          "stdin": "1 3 5 7\n",
+          "expectedStdout": "",
+          "description": "Чётных чисел нет, пустой вывод",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-5-5-2",
+      "type": "code",
+      "title": "Задание 2: Нумерованный список дел",
+      "instruction": "Программа считывает слова из одной строки через пробел.\nВыведите эти слова в виде нумерованного списка, начиная с номера 1, в формате `номер: слово`.\n\n*Пример ввода:*\n`хлеб сыр молоко`\n*Вывод:*\n`1: хлеб`\n`2: сыр`\n`3: молоко`",
+      "difficulty": "easy",
+      "starterCode": "# Разбейте строку и выведите нумерованный список в формате 'номер: слово'\n",
+      "solutionCode": "items = input().split()\nfor i, word in enumerate(items, start=1):\n    print(f\"{i}: {word}\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Разбейте строку: items = input().split().",
+        "Используйте цикл с enumerate: for i, word in enumerate(items, start=1):",
+        "Выведите строку через f-строку: print(f\"{i}: {word}\")."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-5-2-1",
+          "stdin": "хлеб сыр молоко\n",
+          "expectedStdout": "1: хлеб\n2: сыр\n3: молоко\n",
+          "description": "Три продукта",
+          "isHidden": false
+        },
+        {
+          "id": "tc-5-5-2-2",
+          "stdin": "Python\n",
+          "expectedStdout": "1: Python\n",
+          "description": "Одно слово",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-5-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте удвоение списка",
+      "instruction": "Программа должна удвоить каждый элемент списка `nums`. Но автор написал `for x in nums: x = x * 2`, поэтому список не изменился! Перепишите цикл через индексы `range(len(nums))`.",
+      "difficulty": "medium",
+      "starterCode": "nums = [5, 10, 15]\nfor x in nums:\n    x = x * 2\nprint(nums)\n",
+      "solutionCode": "nums = [5, 10, 15]\nfor i in range(len(nums)):\n    nums[i] = nums[i] * 2\nprint(nums)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Используйте цикл по индексам: for i in range(len(nums)):",
+        "Внутри цикла изменяйте ячейку списка: nums[i] = nums[i] * 2."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-5-3-1",
+          "stdin": "",
+          "expectedStdout": "[10, 20, 30]\n",
+          "description": "Удвоение чисел",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-5-4",
+      "type": "predict_output",
+      "title": "Задание 4: Сумма чисел больше 15",
+      "instruction": "Что будет выведено в консоль в результате выполнения программы?",
+      "difficulty": "easy",
+      "starterCode": "total = 0\nfor x in [10, 20, 30]:\n    if x > 15:\n        total += x\nprint(total)",
+      "solutionCode": "50",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "10 не больше 15 (пропускаем).",
+        "20 больше 15: total = 0 + 20 = 20.",
+        "30 больше 15: total = 20 + 30 = 50."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-5-4-1",
+          "stdin": "",
+          "expectedStdout": "50\n",
+          "description": "Сумма 20 + 30 = 50",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-5-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Ключевое слово цикла",
+      "instruction": "Заполните пропуск ключевым словом для прямого перебора элементов списка.",
+      "difficulty": "easy",
+      "starterCode": "fruits = [\"яблоко\", \"банан\", \"груша\"]\nfor fruit ___ fruits:\n    print(fruit)",
+      "solutionCode": "fruits = [\"яблоко\", \"банан\", \"груша\"]\nfor fruit in fruits:\n    print(fruit)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Для перебора элементов используется оператор in."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-5-5-1",
+          "stdin": "",
+          "expectedStdout": "яблоко\nбанан\nгруша\n",
+          "description": "Перебор списка через in",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "id": "lesson-7-3",
+  "moduleId": "module-7",
+  "title": "Методы словарей: keys, values, items, get",
+  "description": "Безопасный доступ и обход словарей: как метод get() защищает от вылетов программы, и как перебирать ключи, значения и пары (key, value) через items() в цикле for.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265108/step/1",
+
+  "theoryMarkdown": "# Мастерство словарей: get, keys, values, items\n\nМы уже умеем создавать словари, но в реальной разработке постоянно возникают две задачи:\n1. Что делать, если ключа может не быть, а ронять программу ошибкой `KeyError` нельзя?\n2. Как перебрать все пары словаря в цикле `for`?\n\n---\n\n## 1. Безопасный метод `.get(ключ, дефолт)`\n\nВместо опасного `d[key]`, который выбросит `KeyError`, профессионалы используют метод `.get()`:\n\n```python\nsettings = {\"theme\": \"dark\", \"volume\": 80}\n\n# Если ключ есть — вернётся его значение:\nprint(settings.get(\"theme\"))  # 'dark'\n\n# Если ключа НЕТ — вернётся None (без всяких ошибок!):\nprint(settings.get(\"language\"))  # None\n\n# Можно задать запасное значение по умолчанию:\nprint(settings.get(\"language\", \"ru\"))  # 'ru'\n```\nПрограмма работает стабильно и никогда не падает!\n\n---\n\n## 2. Обход словаря в цикле: `.keys()`, `.values()`, `.items()`\n\n- **По умолчанию** цикл `for` обходит только ключи словаря:\n  ```python\n  for key in settings:\n      print(key)\n  ```\n\n- **`.values()`** — даёт список всех значений (удобно для суммирования цен):\n  ```python\n  prices = {\"яблоко\": 100, \"хлеб\": 50, \"сыр\": 200}\n  print(sum(prices.values()))  # 350 руб.!\n  ```\n\n- **`.items()`** — возвращает сразу и ключ, и значение в паре:\n  ```python\n  for item, price in prices.items():\n      print(f\"{item} стоит {price} руб.\")\n  ```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-7-3-1",
+      "title": "Пример 1: Безопасное чтение профиля с get",
+      "description": "Если город не указан, подставляем 'Не указан'.",
+      "code": "user = {\"name\": \"Ольга\", \"age\": 22}\ncity = user.get(\"city\", \"Не указан\")\nprint(f\"{user['name']} проживает: {city}\")"
+    },
+    {
+      "id": "ex-7-3-2",
+      "title": "Пример 2: Вывод чека с помощью items()",
+      "description": "Перебираем названия товаров и их цены.",
+      "code": "cart = {\"Молоко\": 85, \"Шоколад\": 110, \"Чай\": 190}\nprint(\"--- ВАШ ЧЕК ---\")\nfor name, cost in cart.items():\n    print(f\"* {name}: {cost} руб.\")\nprint(\"Итого:\", sum(cart.values()), \"руб.\")"
+    },
+    {
+      "id": "ex-7-3-3",
+      "title": "Пример 3: Подсчёт частоты символов в строке",
+      "description": "Классический алгоритм подсчёта повторений с методом get.",
+      "code": "text = \"карусель\"\ncounts = {}\nfor char in text:\n    counts[char] = counts.get(char, 0) + 1\nprint(\"Частота букв:\", counts)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "d = {\"a\": 1, \"b\": 2}\nfor k, v in d:\n    print(k, v)",
+      "errorType": "ValueError",
+      "explanation": "Сам словарь в цикле for возвращает только отдельные ключи ('a', затем 'b'). При попытке распаковать одну букву в две переменные k, v произойдёт ValueError. Обязательно пишите for k, v in d.items():.",
+      "fixCode": "d = {\"a\": 1, \"b\": 2}\nfor k, v in d.items():\n    print(k, v)"
+    },
+    {
+      "mistakeCode": "user = {}\nuser.get(\"score\", 100)\nprint(user)  # Словарь остался пустым {}!",
+      "errorType": "GetDoesNotModify",
+      "explanation": "Метод get() только возвращает значение, но не добавляет ключ в словарь. Для записи используйте user['score'] = 100.",
+      "fixCode": "user = {}\nuser[\"score\"] = 100\nprint(user)"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-7-3-1",
+      "question": "Что вернёт вызов d.get('город', 'Москва'), если ключа 'город' нет в словаре d?",
+      "options": ["'Москва'", "None", "KeyError", "Пустую строку ''"],
+      "correctIndices": [0],
+      "explanation": "Второй аргумент метода get() служит значением по умолчанию, которое возвращается при отсутствии ключа."
+    },
+    {
+      "id": "q-7-3-2",
+      "question": "Какой метод словаря возвращает пары (ключ, значение) для распаковки в цикле for?",
+      "options": [".items()", ".pairs()", ".entries()", ".values()"],
+      "correctIndices": [0],
+      "explanation": "Метод .items() возвращает итерируемый набор пар кортежей (key, value)."
+    },
+    {
+      "id": "q-7-3-3",
+      "question": "Как посчитать общую сумму всех числовых значений словаря prices в одну строчку?",
+      "options": [
+        "sum(prices.values())",
+        "prices.sum()",
+        "sum(prices.keys())",
+        "total(prices)"
+      ],
+      "correctIndices": [0],
+      "explanation": "prices.values() возвращает коллекцию всех значений, а sum() суммирует их."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-7-3-1",
+      "type": "code",
+      "title": "Задание 1: Печать прайс-листа через items()",
+      "instruction": "Задан словарь цен товаров:\n`prices = {\"яблоко\": 100, \"банан\": 70, \"хлеб\": 45}`\n\nС помощью цикла `for item, price in prices.items():` выведите каждую позицию на отдельной строке в формате:\n`Товар: {item}, цена: {price} руб.`\n\n*Вывод:*\n`Товар: яблоко, цена: 100 руб.`\n`Товар: банан, цена: 70 руб.`\n`Товар: хлеб, цена: 45 руб.`",
+      "difficulty": "easy",
+      "starterCode": "prices = {\"яблоко\": 100, \"банан\": 70, \"хлеб\": 45}\n# Обойдите prices.items() и напечатайте каждую строку\n",
+      "solutionCode": "prices = {\"яблоко\": 100, \"банан\": 70, \"хлеб\": 45}\nfor item, price in prices.items():\n    print(f\"Товар: {item}, цена: {price} руб.\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Запустите цикл: for item, price in prices.items():",
+        "Используйте print(f'Товар: {item}, цена: {price} руб.')."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-3-1-1",
+          "stdin": "",
+          "expectedStdout": "Товар: яблоко, цена: 100 руб.\nТовар: банан, цена: 70 руб.\nТовар: хлеб, цена: 45 руб.\n",
+          "description": "Прайс-лист товаров",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-3-2",
+      "type": "code",
+      "title": "Задание 2: Безопасный расчёт скидки с get()",
+      "instruction": "В программе задан словарь скидок по статусу клиента:\n`discounts = {\"vip\": 20, \"gold\": 15, \"silver\": 10}`\n\nСчитайте строку со статусом пользователя с клавиатуры.\nС помощью метода `.get()` получите процент скидки, передав `0` в качестве значения по умолчанию, и напечатайте результат.\n\n*Пример ввода:*\n`gold`\n*Вывод:*\n`15`",
+      "difficulty": "easy",
+      "starterCode": "discounts = {\"vip\": 20, \"gold\": 15, \"silver\": 10}\n# Считайте статус и выведите скидку с помощью метода get\n",
+      "solutionCode": "discounts = {\"vip\": 20, \"gold\": 15, \"silver\": 10}\nstatus = input()\nprint(discounts.get(status, 0))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте строку: status = input().",
+        "Используйте метод: discounts.get(status, 0).",
+        "Напечатайте полученное число."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-3-2-1",
+          "stdin": "gold\n",
+          "expectedStdout": "15\n",
+          "description": "Статус gold",
+          "isHidden": false
+        },
+        {
+          "id": "tc-7-3-2-2",
+          "stdin": "standard\n",
+          "expectedStdout": "0\n",
+          "description": "Неизвестный статус, скидка 0",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-3-3",
+      "type": "find_error",
+      "title": "Задание 3: Добавьте .items() в цикл",
+      "instruction": "Код вызывает ошибку `ValueError: too many values to unpack (expected 2)`, потому что автор забыл вызвать метод `.items()`. Добавьте `.items()` к словарю `data` в заголовке цикла!",
+      "difficulty": "easy",
+      "starterCode": "data = {\"Питон\": 1991, \"Java\": 1995}\n# Добавьте .items() к словарю в цикле:\nfor lang, year in data:\n    print(f\"{lang}: {year}\")\n",
+      "solutionCode": "data = {\"Питон\": 1991, \"Java\": 1995}\nfor lang, year in data.items():\n    print(f\"{lang}: {year}\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Измените заголовок цикла на: for lang, year in data.items():"
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-3-3-1",
+          "stdin": "",
+          "expectedStdout": "Питон: 1991\nJava: 1995\n",
+          "description": "Вывод языков и годов",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-3-4",
+      "type": "predict_output",
+      "title": "Задание 4: Значение по умолчанию в get",
+      "instruction": "Что выведет следующий фрагмент программы?",
+      "difficulty": "easy",
+      "starterCode": "player = {\"name\": \"Рыцарь\"}\nprint(player.get(\"mana\", 100))",
+      "solutionCode": "100",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Ключа 'mana' нет в словаре player.",
+        "Метод get вернёт переданный второй аргумент — 100."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-3-4-1",
+          "stdin": "",
+          "expectedStdout": "100\n",
+          "description": "Вывод значения по умолчанию",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-3-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Метод для пар ключ-значение",
+      "instruction": "Заполните пропуск именем метода словаря для получения пар ключ-значение.",
+      "difficulty": "easy",
+      "starterCode": "user = {\"login\": \"alex\", \"level\": 5}\nfor k, v in user._______():\n    print(k, v)",
+      "solutionCode": "user = {\"login\": \"alex\", \"level\": 5}\nfor k, v in user.items():\n    print(k, v)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Для перебора пар ключ-значение используется метод items."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-3-5-1",
+          "stdin": "",
+          "expectedStdout": "login alex\nlevel 5\n",
+          "description": "Перебор пар items",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

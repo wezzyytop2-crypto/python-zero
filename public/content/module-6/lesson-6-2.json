@@ -1,0 +1,219 @@
+{
+  "id": "lesson-6-2",
+  "moduleId": "module-6",
+  "title": "Параметры и аргументы функции",
+  "description": "Передача данных внутрь функции: чёткая разница между параметрами и аргументами, позиционная передача нескольких значений и ошибка TypeError при несовпадении количества.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265102/step/1",
+
+  "theoryMarkdown": "# Входные данные: Параметры и аргументы\n\nФункции, которые всегда выводят один и тот же текст, скучны. Вся сила функций раскрывается тогда, когда мы **передаём им данные для расчётов**!\n\n---\n\n## 1. В чём разница между параметром и аргументом?\n\nНовички часто путают эти два слова, но разница очень проста:\n\n- **Параметр** — это переменная в заголовке функции (когда мы её создаём):\n  ```python\n  def greet(name):  # 'name' — это ПАРАМЕТР (переменная-приёмник)\n      print(f\"Привет, {name}!\")\n  ```\n- **Аргумент** — это конкретное реальное значение, которое мы передаём в функцию в момент её вызова:\n  ```python\n  greet(\"Алиса\")   # '\"Алиса\"' — это АРГУМЕНТ\n  greet(\"Борис\")   # '\"Борис\"' — это АРГУМЕНТ\n  ```\n\n> 💡 **Аналогия:** Параметр — это почтовый ящик с надписью «Письма», а аргумент — это конкретное бумажное письмо, которое вы в этот ящик опускаете.\n\n---\n\n## 2. Несколько параметров\n\nПараметры перечисляются в круглых скобках через запятую:\n```python\ndef show_rectangle_area(width, height):\n    area = width * height\n    print(f\"Площадь прямоугольника {width}x{height} = {area}\")\n\nshow_rectangle_area(5, 10)  # width получит 5, height получит 10\n```\n\nТакие аргументы называются **позиционными**: первое значение отправляется в первый параметр, второе — во второй.\n\n---\n\n## 3. Ошибка несоответствия количества\n\nЕсли функция ждёт 2 параметра, вы **обязаны передать ровно 2 аргумента**! Иначе Python выдаст ошибку `TypeError`:\n- `show_rectangle_area(5)` ❌ -> `TypeError: missing 1 required positional argument`\n- `show_rectangle_area(5, 10, 15)` ❌ -> `TypeError: takes 2 positional arguments but 3 were given`",
+
+  "theoryExamples": [
+    {
+      "id": "ex-6-2-1",
+      "title": "Пример 1: Персональное приветствие",
+      "description": "Функция принимает имя и выводит персонализированную строчку.",
+      "code": "def hello(user):\n    print(f\"Добро пожаловать в систему, {user}!\")\n\nhello(\"Алексей\")\nhello(\"Мария\")"
+    },
+    {
+      "id": "ex-6-2-2",
+      "title": "Пример 2: Расчёт стоимости заказа",
+      "description": "Передаём цену за единицу и количество товаров.",
+      "code": "def print_bill(item, price, count):\n    total = price * count\n    print(f\"{item}: {count} шт. x {price} руб. = {total} руб.\")\n\nprint_bill(\"Кофе\", 150, 2)\nprint_bill(\"Круассан\", 120, 3)"
+    },
+    {
+      "id": "ex-6-2-3",
+      "title": "Пример 3: Повторитель символов",
+      "description": "Генерация строки заданной длины из нужного символа.",
+      "code": "def repeat_symbol(char, times):\n    print(char * times)\n\nrepeat_symbol(\"#\", 10)\nrepeat_symbol(\"~\", 15)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "def add(a, b):\n    print(a + b)\n\nadd(5)  # Забыли передать b!",
+      "errorType": "TypeError",
+      "explanation": "Функция требует ровно 2 аргумента (a и b), а передали только один. Возникнет TypeError: missing 1 required positional argument.",
+      "fixCode": "def add(a, b):\n    print(a + b)\n\nadd(5, 10)"
+    },
+    {
+      "mistakeCode": "def greet(name):\n    print(\"Привет,\", name)\n\ngreet()  # Передали 0 аргументов",
+      "errorType": "TypeError",
+      "explanation": "Если в заголовке объявлен параметр name, вызывать greet() без параметров нельзя.",
+      "fixCode": "def greet(name):\n    print(\"Привет,\", name)\n\ngreet(\"Друг\")"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-6-2-1",
+      "question": "В чём разница между термином «параметр» и термином «аргумент»?",
+      "options": [
+        "Параметр — переменная в объявлении функции (def f(x)), а аргумент — конкретное значение при вызове (f(5))",
+        "Аргумент — это всегда строка, а параметр — всегда число",
+        "Никакой разницы нет, это одно и то же",
+        "Параметр пишется после вызова программы в терминале"
+      ],
+      "correctIndices": [0],
+      "explanation": "Параметр — это переменная в объявлении функции; аргумент — это конкретное значение, передаваемое при вызове функции."
+    },
+    {
+      "id": "q-6-2-2",
+      "question": "Что произойдёт, если вызвать функцию def f(x, y): print(x + y) с одним аргументом f(10)?",
+      "options": [
+        "Второй аргумент y автоматически станет равен 0",
+        "Python выдаст ошибку TypeError",
+        "Программа напечатает 10",
+        "Произойдёт зависание"
+      ],
+      "correctIndices": [1],
+      "explanation": "Если параметры не имеют значений по умолчанию, передача неполного числа аргументов вызывает ошибку TypeError."
+    },
+    {
+      "id": "q-6-2-3",
+      "question": "Какое значение получит параметр b при вызове f(10, 20), если функция объявлена как def f(a, b):?",
+      "options": ["10", "20", "30", "None"],
+      "correctIndices": [1],
+      "explanation": "При позиционной передаче аргументы сопоставляются по порядку: a = 10, b = 20."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-6-2-1",
+      "type": "code",
+      "title": "Задание 1: Квадрат числа",
+      "instruction": "Объявите функцию `print_square(x)`, которая принимает одно целое число `x` и выводит фразу:\n`Квадрат числа X равен Y` (где X — переданное число, а Y — его квадрат).\n\nЗатем считайте одно целое число с клавиатуры и передайте его в функцию `print_square()`.\n\n*Пример ввода:*\n`5`\n*Вывод:*\n`Квадрат числа 5 равен 25`",
+      "difficulty": "easy",
+      "starterCode": "# Объявите функцию print_square(x), считайте число и вызовите функцию\n",
+      "solutionCode": "def print_square(x):\n    print(f\"Квадрат числа {x} равен {x * x}\")\n\nn = int(input())\nprint_square(n)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Объявление: def print_square(x):",
+        "Внутри: print(f'Квадрат числа {x} равен {x * x}').",
+        "Считайте число n = int(input()) и вызовите: print_square(n)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-2-1-1",
+          "stdin": "5\n",
+          "expectedStdout": "Квадрат числа 5 равен 25\n",
+          "description": "Квадрат числа 5",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-2-1-2",
+          "stdin": "0\n",
+          "expectedStdout": "Квадрат числа 0 равен 0\n",
+          "description": "Квадрат числа 0",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-2-1-3",
+          "stdin": "-4\n",
+          "expectedStdout": "Квадрат числа -4 равен 16\n",
+          "description": "Отрицательное число",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-6-2-2",
+      "type": "code",
+      "title": "Задание 2: Сумма двух чисел через функцию",
+      "instruction": "Создайте функцию `print_sum(a, b)`, которая принимает два числа и выводит их сумму на экран.\n\nСчитайте с клавиатуры два целых числа (по одному на строке) и вызовите функцию `print_sum()` с этими аргументами.\n\n*Пример ввода:*\n`15`\n`25`\n*Вывод:*\n`40`",
+      "difficulty": "easy",
+      "starterCode": "# Создайте print_sum(a, b), считайте два числа и вызовите функцию\n",
+      "solutionCode": "def print_sum(a, b):\n    print(a + b)\n\nx = int(input())\ny = int(input())\nprint_sum(x, y)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Объявите функцию: def print_sum(a, b): print(a + b).",
+        "Считайте два числа: x = int(input()), y = int(input()).",
+        "Вызовите функцию: print_sum(x, y)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-2-2-1",
+          "stdin": "15\n25\n",
+          "expectedStdout": "40\n",
+          "description": "Сумма 15 + 25 = 40",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-2-2-2",
+          "stdin": "-10\n10\n",
+          "expectedStdout": "0\n",
+          "description": "Сумма противоположных чисел",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-2-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте нехватку аргументов",
+      "instruction": "Функция `full_name(first, last)` ожидает имя и фамилию, но была вызвана только с именем, что привело к ошибке `TypeError`. Добавьте в вызов второй аргумент `\"Иванов\"`!",
+      "difficulty": "easy",
+      "starterCode": "def full_name(first, last):\n    print(first, last)\n\n# Исправьте вызов функции, добавив фамилию \"Иванов\":\nfull_name(\"Иван\")\n",
+      "solutionCode": "def full_name(first, last):\n    print(first, last)\n\nfull_name(\"Иван\", \"Иванов\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Передайте в скобках два аргумента через запятую: full_name('Иван', 'Иванов')."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-2-3-1",
+          "stdin": "",
+          "expectedStdout": "Иван Иванов\n",
+          "description": "Полное имя",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-2-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что выведет функция умножения?",
+      "instruction": "Определите, что выведет следующий код:",
+      "difficulty": "easy",
+      "starterCode": "def calc(a, b):\n    print(a * 2 + b)\n\ncalc(3, 4)",
+      "solutionCode": "10",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "a = 3, b = 4.",
+        "Вычисляется 3 * 2 + 4 = 6 + 4 = 10."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-2-4-1",
+          "stdin": "",
+          "expectedStdout": "10\n",
+          "description": "Результат вычисления 3 * 2 + 4",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-2-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Имя параметра",
+      "instruction": "Заполните пропуск в круглых скобках имени параметра, чтобы функция использовала переменную `word`.",
+      "difficulty": "easy",
+      "starterCode": "def echo(____):\n    print(word, word)\n\necho(\"Привет\")",
+      "solutionCode": "def echo(word):\n    print(word, word)\n\necho(\"Привет\")",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "В теле функции используется переменная word, значит и параметр должен называться word."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-2-5-1",
+          "stdin": "",
+          "expectedStdout": "Привет Привет\n",
+          "description": "Повторение слова",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

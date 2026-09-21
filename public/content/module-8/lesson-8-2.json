@@ -1,0 +1,215 @@
+{
+  "id": "lesson-8-2",
+  "moduleId": "module-8",
+  "title": "Импорт модулей: import math, random",
+  "description": "Философия «Батарейки в комплекте»: как подключать готовые модули ключевым словом import, математические вычисления с math и магия случайных чисел с random.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265112/step/1",
+
+  "theoryMarkdown": "# Батарейки в комплекте: Модули math и random\n\nСоздатели Python придерживаются философии **«Batteries Included» («Батарейки в комплекте»)**. Это значит, что вместе с языком поставляются сотни готовых библиотек на все случаи жизни — от математики до работы со временем и интернетом!\n\nФайл с готовым кодом и функциями называется **модулем**.\n\n---\n\n## 1. Как подключать модули: `import`\n\nЧтобы получить доступ к функциям модуля, его нужно импортировать в самом верху файла:\n\n```python\nimport math  # Подключаем математический модуль\n\nprint(math.sqrt(16))  # Квадратный корень: 4.0\nprint(math.pi)        # Константа Пи: 3.1415926535...\n```\n\n### Способы импорта:\n1. `import math` — классический и самый безопасный (вызовы через `math.функция`).\n2. `from math import sqrt, ceil` — импортирует только нужные функции (можно вызывать просто `sqrt(16)`).\n3. `import random as rnd` — импорт с коротким псевдонимом.\n\n---\n\n## 2. Модуль `math`\n- `math.sqrt(x)` — извлечение квадратного корня ($\\\\sqrt{x}$).\n- `math.ceil(x)` — округление вверх до ближайшего целого (`math.ceil(4.1)` -> `5`).\n- `math.floor(x)` — округление вниз (`math.floor(4.9)` -> `4`).\n- `math.pi` — число $\\\\pi$.\n\n---\n\n## 3. Модуль `random` (Генератор случайностей)\n- `random.randint(a, b)` — случайное целое число от `a` до `b` **включительно** (отлично для броска кубика `randint(1, 6)`).\n- `random.choice(items)` — случайный выбор одного элемента из списка.\n- `random.shuffle(items)` — перемешивание списка в случайном порядке на месте.",
+
+  "theoryExamples": [
+    {
+      "id": "ex-8-2-1",
+      "title": "Пример 1: Теорема Пифагора с модулем math",
+      "description": "Находим гипотенузу треугольника по двум катетам.",
+      "code": "import math\n\na = 3\nb = 4\nc = math.sqrt(a**2 + b**2)\nprint(\"Гипотенуза:\", c)  # 5.0"
+    },
+    {
+      "id": "ex-8-2-2",
+      "title": "Пример 2: Округление вверх для упаковки",
+      "description": "Сколько коробок нужно для 25 предметов, если в коробку влезает 6?",
+      "code": "import math\n\nitems = 25\nbox_capacity = 6\nboxes_needed = math.ceil(items / box_capacity)\nprint(\"Понадобится коробок:\", boxes_needed)  # 5"
+    },
+    {
+      "id": "ex-8-2-3",
+      "title": "Пример 3: Лотерея со случайным выбором",
+      "description": "Выбор победителя из списка участников.",
+      "code": "import random\n\nparticipants = [\"Анна\", \"Борис\", \"Вера\", \"Григорий\"]\nwinner = random.choice(participants)\nprint(\"Победитель розыгрыша:\", winner)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "import math\nprint(sqrt(25))",
+      "errorType": "NameError",
+      "explanation": "При импорте 'import math' к функциям нужно обращаться через имя модуля: math.sqrt(25). Либо импортировать напрямую: 'from math import sqrt'.",
+      "fixCode": "import math\nprint(math.sqrt(25))"
+    },
+    {
+      "mistakeCode": "import random\n# Автор ожидал, что 10 не выпадет никогда\nx = random.randint(1, 10)",
+      "errorType": "LogicalError",
+      "explanation": "В отличие от range(), функция random.randint(a, b) ВКЛЮЧАЕТ обе границы! Число 10 вполне может выпасть.",
+      "fixCode": "import random\nx = random.randint(1, 10)  # Границы 1 и 10 включены"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-8-2-1",
+      "question": "Какое ключевое слово используется для подключения модулей в Python?",
+      "options": ["import", "include", "require", "using"],
+      "correctIndices": [0],
+      "explanation": "В Python модули подключаются с помощью ключевого слова import."
+    },
+    {
+      "id": "q-8-2-2",
+      "question": "Что вернёт функция math.ceil(3.2)?",
+      "options": ["4", "3", "3.0", "3.5"],
+      "correctIndices": [0],
+      "explanation": "math.ceil округляет дробное число вверх к ближайшему большему целому (3.2 округляется до 4)."
+    },
+    {
+      "id": "q-8-2-3",
+      "question": "Включает ли random.randint(1, 6) число 6 в возможные результаты?",
+      "options": [
+        "Да, обе границы (и 1, и 6) включены",
+        "Нет, правая граница 6 никогда не выпадет",
+        "Только если передать дополнительный параметр",
+        "Зависит от версии операционной системы"
+      ],
+      "correctIndices": [0],
+      "explanation": "random.randint(a, b) генерирует случайное целое число на отрезке [a, b], включая оба конца."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-8-2-1",
+      "type": "code",
+      "title": "Задание 1: Целый квадратный корень",
+      "instruction": "Программа считывает одно положительное целое число.\nИмпортируйте модуль `math`, вычислите квадратный корень этого числа с помощью `math.sqrt()` и напечатайте целую часть результата (`int(math.sqrt(x))`).\n\n*Пример ввода:*\n`49`\n*Вывод:*\n`7`",
+      "difficulty": "easy",
+      "starterCode": "# Импортируйте math, считайте число и выведите int(math.sqrt(n))\n",
+      "solutionCode": "import math\n\nn = int(input())\nprint(int(math.sqrt(n)))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Напишите: import math",
+        "Считайте число: n = int(input()).",
+        "Выведите целое число: print(int(math.sqrt(n)))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-2-1-1",
+          "stdin": "49\n",
+          "expectedStdout": "7\n",
+          "description": "Корень из 49 = 7",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-2-1-2",
+          "stdin": "100\n",
+          "expectedStdout": "10\n",
+          "description": "Корень из 100 = 10",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-2-1-3",
+          "stdin": "50\n",
+          "expectedStdout": "7\n",
+          "description": "Корень из 50 (~7.07, целая часть 7)",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-8-2-2",
+      "type": "code",
+      "title": "Задание 2: Площадь круга с округлением вверх",
+      "instruction": "С клавиатуры считывается натуральное число `R` — радиус круга.\nВычислите точную площадь круга по формуле $S = \\pi \\cdot R^2$, используя константу `math.pi`.\nОкруглите полученную площадь **вверх** до ближайшего целого с помощью функции `math.ceil()` и выведите результат.\n\n*Пример ввода:*\n`5`\n*Вывод:*\n`79` (так как pi * 25 = 78.5398... округляется вверх до 79)",
+      "difficulty": "easy",
+      "starterCode": "# Вычислите площадь круга с math.pi и округлите вверх через math.ceil\n",
+      "solutionCode": "import math\n\nr = int(input())\narea = math.pi * (r ** 2)\nprint(math.ceil(area))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Импортируйте math: import math",
+        "Считайте радиус: r = int(input()).",
+        "Вычислите площадь: area = math.pi * (r ** 2).",
+        "Выведите округление вверх: print(math.ceil(area))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-2-2-1",
+          "stdin": "5\n",
+          "expectedStdout": "79\n",
+          "description": "Радиус 5, площадь ~78.54 -> 79",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-2-2-2",
+          "stdin": "1\n",
+          "expectedStdout": "4\n",
+          "description": "Радиус 1, pi ~ 3.14 -> 4",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-2-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте вызов функции из модуля",
+      "instruction": "Код вызывает ошибку `NameError: name 'sqrt' is not defined`, потому что модуль `math` был импортирован целиком, а к функции обратились без префикса `math.`. Исправьте вызов функции!",
+      "difficulty": "easy",
+      "starterCode": "import math\n\n# Исправьте эту строку, добавив имя модуля:\nprint(int(sqrt(64)))\n",
+      "solutionCode": "import math\n\nprint(int(math.sqrt(64)))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Замените sqrt(64) на math.sqrt(64)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-2-3-1",
+          "stdin": "",
+          "expectedStdout": "8\n",
+          "description": "Квадратный корень из 64",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-2-4",
+      "type": "predict_output",
+      "title": "Задание 4: Округление вниз и вверх",
+      "instruction": "Что напечатает следующая программа?",
+      "difficulty": "easy",
+      "starterCode": "import math\nprint(math.floor(7.9), math.ceil(7.1))",
+      "solutionCode": "7 8",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "math.floor(7.9) округляет вниз до 7.",
+        "math.ceil(7.1) округляет вверх до 8."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-2-4-1",
+          "stdin": "",
+          "expectedStdout": "7 8\n",
+          "description": "Округления floor и ceil",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-2-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Ключевое слово импорта",
+      "instruction": "Заполните пропуск командой подключения модуля.",
+      "difficulty": "easy",
+      "starterCode": "______ math\nprint(math.pi > 3)",
+      "solutionCode": "import math\nprint(math.pi > 3)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Для подключения модуля используется команда import."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-2-5-1",
+          "stdin": "",
+          "expectedStdout": "True\n",
+          "description": "Импорт модуля math",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

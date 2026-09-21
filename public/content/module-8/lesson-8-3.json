@@ -1,0 +1,200 @@
+{
+  "id": "lesson-8-3",
+  "moduleId": "module-8",
+  "title": "Полезные функции стандартной библиотеки",
+  "description": "Инструментарий профессионала: застёжка-молния zip() для сшивания списков, логические агрегаторы all() и any(), и календарные расчёты с datetime.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265113/step/1",
+
+  "theoryMarkdown": "# Супер-инструменты: zip, all, any и datetime\n\nВ арсенале Python есть несколько лаконичных встроенных функций, которые позволяют заменять десятки строк сложных циклов одной понятной командой.\n\n---\n\n## 1. Функция `zip()` — застёжка-молния\n\nФункция `zip()` берёт два (или больше) независимых списка и соединяет их элементы в пары, словно зубчики застёжки-молнии на куртке:\n\n```python\nnames = [\"Анна\", \"Борис\", \"Виктор\"]\nscores = [100, 85, 92]\n\nfor name, score in zip(names, scores):\n    print(f\"{name} набрал {score} баллов\")\n# Анна набрал 100 баллов\n# Борис набрал 85 баллов\n# Виктор набрал 92 баллов\n```\n\n---\n\n## 2. Логические контролёры: `all()` и `any()`\n\n- **`all(условия)`** — возвращает `True` только тогда, когда **АБСОЛЮТНО ВСЕ** элементы истинны:\n  ```python\n  grades = [5, 4, 5, 5]\n  is_honors = all(g >= 4 for g in grades)  # True (все оценки 4 и выше!)\n  ```\n- **`any(условия)`** — возвращает `True`, если **ХОТЯ БЫ ОДИН** элемент истинен:\n  ```python\n  has_two = any(g == 2 for g in grades)    # False (двоек нет)\n  ```\n\n---\n\n## 3. Модуль `datetime` — даты и календари\n\nДля работы с датами и расчёта количества дней используется модуль `datetime`:\n```python\nfrom datetime import date\n\nd1 = date(2025, 1, 1)\nd2 = date(2025, 1, 10)\ndays_between = (d2 - d1).days\nprint(\"Разница в днях:\", days_between)  # 9 дней!\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-8-3-1",
+      "title": "Пример 1: Создание словаря из двух списков с zip()",
+      "description": "Мгновенное превращение двух параллельных списков в словарь.",
+      "code": "keys = [\"хост\", \"порт\", \"пользователь\"]\nvalues = [\"localhost\", 8080, \"admin\"]\nconfig = dict(zip(keys, values))\nprint(config)"
+    },
+    {
+      "id": "ex-8-3-2",
+      "title": "Пример 2: Проверка требований к паролю",
+      "description": "Проверяем наличие цифры в пароле через any().",
+      "code": "password = \"secret7pass\"\nhas_digit = any(char.isdigit() for char in password)\nprint(\"Пароль содержит цифру?\", has_digit)"
+    },
+    {
+      "id": "ex-8-3-3",
+      "title": "Пример 3: Расчёт возраста в годах",
+      "description": "Определение разницы между годами.",
+      "code": "from datetime import date\n\nbirth_year = 2000\ncurrent_year = date.today().year\nprint(\"Возраст:\", current_year - birth_year)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "a = [1, 2]\nb = ['x', 'y']\nprint(zip(a, b))  # Напечатает <zip object at ...>",
+      "errorType": "LazyIterator",
+      "explanation": "Функция zip возвращает ленивый генератор. Чтобы увидеть список пар на экране, оберните результат в list(): print(list(zip(a, b))).",
+      "fixCode": "a = [1, 2]\nb = ['x', 'y']\nprint(list(zip(a, b)))  # [(1, 'x'), (2, 'y')]"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-8-3-1",
+      "question": "Что делает функция zip(list1, list2)?",
+      "options": [
+        "Объединяет соответствующие элементы списков в пары кортежей",
+        "Сжимает списки в zip-архив на диске",
+        "Сортирует списки в алфавитном порядке",
+        "Удаляет одинаковые элементы"
+      ],
+      "correctIndices": [0],
+      "explanation": "zip объединяет параллельные коллекции попарно в кортежи."
+    },
+    {
+      "id": "q-8-3-2",
+      "question": "Что вернёт функция all([True, True, False])?",
+      "options": ["False", "True", "None", "Ошибка TypeError"],
+      "correctIndices": [0],
+      "explanation": "Функция all() возвращает True только тогда, когда ВСЕ элементы истинны. Наличие одного False даёт итоговый False."
+    },
+    {
+      "id": "q-8-3-3",
+      "question": "Что вернёт функция any([False, False, True])?",
+      "options": ["True", "False", "None", "3"],
+      "correctIndices": [0],
+      "explanation": "Функция any() возвращает True, если хотя бы один элемент коллекции истинен."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-8-3-1",
+      "type": "code",
+      "title": "Задание 1: Парный вывод учеников и оценок",
+      "instruction": "Программа считывает две строки:\n1. Имена учеников через пробел\n2. Их оценки за тест через пробел (в том же количестве)\n\nС помощью функции `zip()` обойдите пары и выведите каждую пару на отдельной строке в формате:\n`{имя}: {оценка}`\n\n*Пример ввода:*\n`Аня Боря Вера`\n`5 4 5`\n*Вывод:*\n`Аня: 5`\n`Боря: 4`\n`Вера: 5`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте две строки и выведите пары с помощью zip()\n",
+      "solutionCode": "names = input().split()\nscores = input().split()\nfor name, score in zip(names, scores):\n    print(f\"{name}: {score}\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "names = input().split()",
+        "scores = input().split()",
+        "for name, score in zip(names, scores): print(f'{name}: {score}')"
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-3-1-1",
+          "stdin": "Аня Боря Вера\n5 4 5\n",
+          "expectedStdout": "Аня: 5\nБоря: 4\nВера: 5\n",
+          "description": "Три ученика с оценками",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-3-1-2",
+          "stdin": "Кот Пёс\n10 20\n",
+          "expectedStdout": "Кот: 10\nПёс: 20\n",
+          "description": "Две пары",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-3-2",
+      "type": "code",
+      "title": "Задание 2: Проверка всех чисел через all()",
+      "instruction": "С клавиатуры вводится строка целых чисел через пробел.\nС помощью функции `all()` проверьте, являются ли **все** введённые числа строго положительными (`x > 0`).\nЕсли все положительные, напечатайте `ДА`, иначе напечатайте `НЕТ`.\n\n*Пример ввода:*\n`10 5 8 100`\n*Вывод:*\n`ДА`",
+      "difficulty": "easy",
+      "starterCode": "# Проверьте все ли числа больше 0 с помощью all()\n",
+      "solutionCode": "nums = [int(x) for x in input().split()]\nif all(x > 0 for x in nums):\n    print(\"ДА\")\nelse:\n    print(\"НЕТ\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "nums = [int(x) for x in input().split()]",
+        "if all(x > 0 for x in nums): print('ДА') else: print('НЕТ')"
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-3-2-1",
+          "stdin": "10 5 8 100\n",
+          "expectedStdout": "ДА\n",
+          "description": "Все положительные числа",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-3-2-2",
+          "stdin": "10 -2 5\n",
+          "expectedStdout": "НЕТ\n",
+          "description": "Есть отрицательное число",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-3-3",
+      "type": "find_error",
+      "title": "Задание 3: Превратите zip в список",
+      "instruction": "Вместо списка пар на экране напечатался `<zip object at ...>`. Оберните вызов `zip(a, b)` в функцию `list()`, чтобы получить настоящий список кортежей!",
+      "difficulty": "easy",
+      "starterCode": "a = [1, 2]\nb = [\"a\", \"b\"]\n# Оберните zip в list():\nprint(zip(a, b))\n",
+      "solutionCode": "a = [1, 2]\nb = [\"a\", \"b\"]\nprint(list(zip(a, b)))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Замените zip(a, b) на list(zip(a, b))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-3-3-1",
+          "stdin": "",
+          "expectedStdout": "[(1, 'a'), (2, 'b')]\n",
+          "description": "Список пар кортежей",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-3-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что вернёт any?",
+      "instruction": "Определите, что выведет следующий код:",
+      "difficulty": "easy",
+      "starterCode": "checks = [False, False, True, False]\nprint(any(checks))",
+      "solutionCode": "True",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "В списке checks есть хотя бы один True (на 3-й позиции).",
+        "Значит any() вернёт True."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-3-4-1",
+          "stdin": "",
+          "expectedStdout": "True\n",
+          "description": "Результат any()",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-3-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Сшивание коллекций",
+      "instruction": "Заполните пропуск именем функции, сшивающей два списка попарно.",
+      "difficulty": "easy",
+      "starterCode": "x = [1, 2]\ny = [10, 20]\nfor a, b in ___(x, y):\n    print(a + b)",
+      "solutionCode": "x = [1, 2]\ny = [10, 20]\nfor a, b in zip(x, y):\n    print(a + b)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Функция называется zip."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-3-5-1",
+          "stdin": "",
+          "expectedStdout": "11\n22\n",
+          "description": "Сумма пар",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

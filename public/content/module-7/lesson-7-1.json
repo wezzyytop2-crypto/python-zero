@@ -1,0 +1,213 @@
+{
+  "id": "lesson-7-1",
+  "moduleId": "module-7",
+  "title": "Кортежи (tuple): неизменяемые списки",
+  "description": "Неизменяемые последовательности данных: круглые скобки (), защита от случайных багов, элегантная распаковка (a, b = point) и обмен переменных в одну строчку.",
+  "estimatedMinutes": 15,
+  "stepikLessonUrl": "https://stepik.org/lesson/265106/step/1",
+
+  "theoryMarkdown": "# Камень против пластилина: Кортежи (tuple)\n\nМы уже знаем, что списки `[1, 2, 3]` — это изменяемый «пластилин»: в них можно добавлять элементы, удалять их или менять значения ячеек. Но в реальных программах часто нужны **данные, которые ни в коем случае нельзя случайно изменить**!\n\nДля этого в Python есть **кортежи (tuples)**.\n\n> 💡 **Аналогия:** Список — это блокнот на кольцах (можно вырвать лист или вставить новый). Кортеж — это гравировка на гранитной плите или паспортные данные: однажды записали, и изменить уже нельзя.\n\n---\n\n## 1. Как объявлять кортежи: круглые скобки `()`\n\n```python\n# Кортеж координат точки на карте\npoint = (55.7558, 37.6173)\n\n# Кортеж цветов RGB\nred_color = (255, 0, 0)\n\n# Доступ по индексу — точно как у списков:\nprint(point[0])   # 55.7558\nprint(point[-1])  # 37.6173\n```\n\n> ⚠️ **Попытка изменить кортеж вызовет ошибку:**\n> `point[0] = 10.0` ❌ -> `TypeError: 'tuple' object does not support item assignment`\n\n---\n\n## 2. Зачем нужны кортежи?\n1. **Защита от случайных ошибок:** если данные критически важны и не должны меняться в ходе программы (дни недели, координаты, настройки).\n2. **Быстродействие и память:** кортежи занимают меньше памяти и обрабатываются процессором быстрее списков.\n\n> 💡 **Хитрая ловушка:** Чтобы создать кортеж из **одного элемента**, обязательна запятая: `t = (5,)`. Если написать `t = (5)`, Python посчитает это обычным числом в математических скобках!\n\n---\n\n## 3. Распаковка кортежей (Tuple Unpacking)\n\nPython позволяет «распаковать» кортеж сразу в несколько переменных:\n```python\nperson = (\"Алексей\", 25)\nname, age = person\nprint(name)  # Алексей\nprint(age)   # 25\n```\n\nБлагодаря этому трюку в Python можно **поменять местами значения двух переменных в одну строчку без третьей переменной**:\n```python\na = 1\nb = 2\na, b = b, a  # Теперь a = 2, b = 1!\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-7-1-1",
+      "title": "Пример 1: Координаты и неизменяемость",
+      "description": "Хранение точки на плоскости (x, y).",
+      "code": "point = (10, 20)\nprint(\"X:\", point[0])\nprint(\"Y:\", point[1])\nprint(\"Длина кортежа:\", len(point))"
+    },
+    {
+      "id": "ex-7-1-2",
+      "title": "Пример 2: Обмен значениями в одну строку",
+      "description": "Элегантный обмен без временных переменных.",
+      "code": "first = \"золото\"\nsecond = \"серебро\"\nprint(\"До обмена:\", first, second)\nfirst, second = second, first\nprint(\"После обмена:\", first, second)"
+    },
+    {
+      "id": "ex-7-1-3",
+      "title": "Пример 3: Возврат нескольких значений из функции",
+      "description": "Функция возвращает кортеж из двух значений.",
+      "code": "def get_user():\n    return \"Анна\", 18  # возвращает кортеж ('Анна', 18)\n\nusername, user_age = get_user()\nprint(f\"{username} — {user_age} лет\")"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "coords = (10, 20)\ncoords[0] = 15",
+      "errorType": "TypeError",
+      "explanation": "Кортежи неизменяемы! Если вам требуется модифицировать элементы, используйте список со скобками []: coords = [10, 20].",
+      "fixCode": "coords = [10, 20]\ncoords[0] = 15"
+    },
+    {
+      "mistakeCode": "single = (42)\nprint(type(single))  # Выведет <class 'int'>, а не tuple!",
+      "errorType": "MissingComma",
+      "explanation": "Одиночные скобки (42) воспринимаются как математическая группировка. Чтобы создать кортеж из одного элемента, поставьте запятую: (42,).",
+      "fixCode": "single = (42,)\nprint(type(single))  # <class 'tuple'>"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-7-1-1",
+      "question": "В чём главное отличие кортежа (tuple) от списка (list)?",
+      "options": [
+        "Кортеж неизменяем (его элементы нельзя заменить или удалить)",
+        "В кортежах нельзя хранить строки",
+        "Кортежи всегда содержат ровно 2 элемента",
+        "Кортежи создаются фигурными скобками {}"
+      ],
+      "correctIndices": [0],
+      "explanation": "Кортеж — это неизменяемая структура данных (immutable sequence)."
+    },
+    {
+      "id": "q-7-1-2",
+      "question": "Как в Python правильно объявить кортеж, состоящий всего из одного числа 99?",
+      "options": ["(99,)", "(99)", "[99]", "tuple: 99"],
+      "correctIndices": [0],
+      "explanation": "Для одноэлементного кортежа обязательна запятая после значения: (99,)."
+    },
+    {
+      "id": "q-7-1-3",
+      "question": "Что произойдёт в результате выполнения строки: a, b = 10, 20; a, b = b, a?",
+      "options": [
+        "Значения переменных поменяются местами: a станет 20, b станет 10",
+        "Обе переменные станут равны 10",
+        "Обе переменные станут равны 20",
+        "Случится ошибка SyntaxError"
+      ],
+      "correctIndices": [0],
+      "explanation": "Это классический питонический способ обмена значениями двух переменных через кортеж."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-7-1-1",
+      "type": "code",
+      "title": "Задание 1: Распаковка точки",
+      "instruction": "Программа считывает два целых числа (координаты X и Y) по одному на строке.\nСоздайте из них кортеж `point = (x, y)`.\nЗатем распакуйте его в переменные `px` и `py` (`px, py = point`) и напечатайте строку вида:\n`Точка: X = px, Y = py`\n\n*Пример ввода:*\n`15`\n`30`\n*Вывод:*\n`Точка: X = 15, Y = 30`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте координаты, создайте кортеж, распакуйте и выведите\n",
+      "solutionCode": "x = int(input())\ny = int(input())\npoint = (x, y)\npx, py = point\nprint(f\"Точка: X = {px}, Y = {py}\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте числа: x = int(input()), y = int(input()).",
+        "Создайте кортеж: point = (x, y).",
+        "Распакуйте: px, py = point.",
+        "Выведите через f-строку: print(f'Точка: X = {px}, Y = {py}')."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-1-1-1",
+          "stdin": "15\n30\n",
+          "expectedStdout": "Точка: X = 15, Y = 30\n",
+          "description": "Координаты 15 и 30",
+          "isHidden": false
+        },
+        {
+          "id": "tc-7-1-1-2",
+          "stdin": "0\n-5\n",
+          "expectedStdout": "Точка: X = 0, Y = -5\n",
+          "description": "Координаты с нулем и минусом",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-1-2",
+      "type": "code",
+      "title": "Задание 2: Возврат минимума и максимума",
+      "instruction": "Напишите функцию `get_bounds(nums)`, которая принимает список чисел и возвращает кортеж из двух элементов: наименьшего числа (`min(nums)`) и наибольшего числа (`max(nums)`).\n\nСчитайте строку из трёх целых чисел через пробел, преобразуйте в список чисел, передайте в функцию, распакуйте результат в переменные `low` и `high` и выведите `low` на первой строке, а `high` — на второй.\n\n*Пример ввода:*\n`45 12 89`\n*Вывод:*\n`12`\n`89`",
+      "difficulty": "easy",
+      "starterCode": "# Напишите get_bounds, считайте числа и напечатайте минимум и максимум\n",
+      "solutionCode": "def get_bounds(nums):\n    return min(nums), max(nums)\n\nnumbers = [int(x) for x in input().split()]\nlow, high = get_bounds(numbers)\nprint(low)\nprint(high)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "def get_bounds(nums): return min(nums), max(nums)",
+        "numbers = [int(x) for x in input().split()]",
+        "low, high = get_bounds(numbers)",
+        "print(low); print(high)"
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-1-2-1",
+          "stdin": "45 12 89\n",
+          "expectedStdout": "12\n89\n",
+          "description": "Числа 45, 12, 89",
+          "isHidden": false
+        },
+        {
+          "id": "tc-7-1-2-2",
+          "stdin": "5 5 5\n",
+          "expectedStdout": "5\n5\n",
+          "description": "Одинаковые числа",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-1-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте круглые скобки на квадратные",
+      "instruction": "В коде попытались изменить элемент кортежа, что привело к ошибке `TypeError`. Замените круглые скобки кортежа на квадратные скобки списка, чтобы код выполнился успешно!",
+      "difficulty": "easy",
+      "starterCode": "# Замените круглые скобки на квадратные:\nscores = (5, 4, 3)\nscores[2] = 5\nprint(scores)\n",
+      "solutionCode": "scores = [5, 4, 3]\nscores[2] = 5\nprint(scores)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Списки создаются с квадратными скобками: scores = [5, 4, 3]."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-1-3-1",
+          "stdin": "",
+          "expectedStdout": "[5, 4, 5]\n",
+          "description": "Изменённый список",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-1-4",
+      "type": "predict_output",
+      "title": "Задание 4: Обмен переменных",
+      "instruction": "Определите, что напечатает программа после обмена значений:",
+      "difficulty": "easy",
+      "starterCode": "a = 100\nb = 200\na, b = b, a\nprint(a, b)",
+      "solutionCode": "200 100",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Конструкция a, b = b, a присваивает a значение b (200), а b значение a (100)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-1-4-1",
+          "stdin": "",
+          "expectedStdout": "200 100\n",
+          "description": "Результат обмена",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-1-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Запятая для кортежа",
+      "instruction": "Заполните пропуск символом запятой, чтобы переменная `item` стала настоящим кортежем.",
+      "difficulty": "easy",
+      "starterCode": "item = (42___)\nprint(type(item) == tuple)",
+      "solutionCode": "item = (42,)\nprint(type(item) == tuple)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Для кортежа из одного элемента обязательна запятая: (42,)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-1-5-1",
+          "stdin": "",
+          "expectedStdout": "True\n",
+          "description": "Проверка типа tuple",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

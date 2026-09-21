@@ -1,0 +1,204 @@
+{
+  "id": "lesson-5-4",
+  "moduleId": "module-5",
+  "title": "Методы списков: append, remove, pop, sort",
+  "description": "Управление динамическими списками: добавление элементов в конец (append), удаление по значению (remove) и индексу (pop), правильная сортировка (sort) и главная ловушка с None.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265099/step/1",
+
+  "theoryMarkdown": "# Живые списки: append, remove, pop, sort\n\nСписок в Python — это гибкая динамическая лента. В неё можно в любой момент положить новые данные, выбросить ненужные или выстроить всё по алфавиту и росту.\n\n---\n\n## 1. Добавление элементов: `.append(x)`\n\nМетод `.append(x)` добавляет элемент `x` в **самый конец списка**:\n```python\ntodolist = []\ntodolist.append(\"Сделать уроки\")\ntodolist.append(\"Погулять с собакой\")\ntodolist.append(\"Поиграть\")\nprint(todolist)  # ['Сделать уроки', 'Погулять с собакой', 'Поиграть']\n```\n\n> ⚠️ **Смертельная ошибка новичков:**\n> НИКОГДА не пишите `lst = lst.append(x)`!\n> Метод `.append()` изменяет список **на месте** и возвращает значение `None` (ничего). Если написать `lst = lst.append(...)`, ваш список просто превратится в `None` и сотрётся! Пишите просто: `lst.append(x)`.\n\n---\n\n## 2. Удаление элементов: `.remove()` и `.pop()`\n\n- `lst.remove(значение)` — находит и удаляет **первое совпадение по значению**:\n```python\nfruits = [\"яблоко\", \"банан\", \"груша\", \"банан\"]\nfruits.remove(\"банан\")  # удалит первый банан\nprint(fruits)           # ['яблоко', 'груша', 'банан']\n```\n\n- `lst.pop()` — «выталкивает» (удаляет и возвращает) **самый последний элемент**:\n```python\nnumbers = [10, 20, 30]\nlast = numbers.pop()  # last = 30\nprint(numbers)        # [10, 20]\n```\n\n---\n\n## 3. Сортировка: `.sort()` и разворот `.reverse()`\n\n- `lst.sort()` — сортирует элементы на месте по возрастанию (числа от меньшего к большему, строки по алфавиту):\n```python\nnums = [45, 12, 89, 3, 27]\nnums.sort()\nprint(nums)  # [3, 12, 27, 45, 89]\n```\n\n- `lst.sort(reverse=True)` — сортировка по убыванию.\n- `lst.reverse()` — просто разворачивает порядок элементов задом наперёд без сортировки.",
+
+  "theoryExamples": [
+    {
+      "id": "ex-5-4-1",
+      "title": "Пример 1: Накопление данных в цикле через append",
+      "description": "Считываем несколько строк и складываем в единый список.",
+      "code": "words = []\nfor _ in range(3):\n    w = input(\"Введите слово: \")\n    words.append(w)\nprint(\"Полученный список:\", words)"
+    },
+    {
+      "id": "ex-5-4-2",
+      "title": "Пример 2: Удаление элементов списка",
+      "description": "Используем remove для удаления по имени и pop для извлечения последнего.",
+      "code": "cart = [\"молоко\", \"хлеб\", \"чипсы\", \"яблоки\"]\ncart.remove(\"чипсы\")  # отказались от вредного\ntaken = cart.pop()    # взяли последний товар\nprint(\"Взятый товар:\", taken)\nprint(\"Осталось в корзине:\", cart)"
+    },
+    {
+      "id": "ex-5-4-3",
+      "title": "Пример 3: Сортировка списка",
+      "description": "Сортируем список баллов по возрастанию и по убыванию.",
+      "code": "scores = [85, 92, 78, 99, 64]\nscores.sort()\nprint(\"По возрастанию:\", scores)\nscores.sort(reverse=True)\nprint(\"По убыванию:\", scores)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "nums = [1, 2, 3]\nnums = nums.append(4)\nprint(nums)  # Выведет None!",
+      "errorType": "AppendReturnsNone",
+      "explanation": "Методы списков (.append, .sort, .reverse) модифицируют список на месте и возвращают None! Не присваивайте результат обратно в переменную.",
+      "fixCode": "nums = [1, 2, 3]\nnums.append(4)\nprint(nums)  # [1, 2, 3, 4]"
+    },
+    {
+      "mistakeCode": "items = [\"чай\", \"кофе\"]\nitems.remove(\"сок\")",
+      "errorType": "ValueError",
+      "explanation": "Если элемента 'сок' нет в списке, метод .remove() выбросит ошибку 'ValueError: list.remove(x): x not in list'. Перед удалением проверяйте 'if x in lst:'.",
+      "fixCode": "items = [\"чай\", \"кофе\"]\nif \"сок\" in items:\n    items.remove(\"сок\")"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-5-4-1",
+      "question": "Куда метод append() помещает новый элемент списка?",
+      "options": ["В самый конец списка", "В самое начало списка", "На случайную позицию", "В середину списка"],
+      "correctIndices": [0],
+      "explanation": "append() всегда дописывает переданный элемент в самый конец списка."
+    },
+    {
+      "id": "q-5-4-2",
+      "question": "Что будет в переменной x после кода: a = [1, 2]; x = a.sort()?",
+      "options": ["[1, 2]", "[2, 1]", "None", "Ошибка TypeError"],
+      "correctIndices": [2],
+      "explanation": "Метод .sort() сортирует список на месте и возвращает None, поэтому x станет None."
+    },
+    {
+      "id": "q-5-4-3",
+      "question": "Какой метод удаляет и возвращает последний элемент списка?",
+      "options": ["pop()", "remove()", "delete()", "clear()"],
+      "correctIndices": [0],
+      "explanation": "Метод pop() удаляет последний элемент из списка и возвращает его значение."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-5-4-1",
+      "type": "code",
+      "title": "Задание 1: Сбор и сортировка чисел",
+      "instruction": "Программа считывает 4 целых числа, каждое на новой строке.\nДобавьте их в пустой список с помощью метода `.append()`.\nЗатем отсортируйте список по возрастанию с помощью `.sort()` и выведите его на экран с помощью `print(numbers)`.\n\n*Пример ввода:*\n`50`\n`12`\n`99`\n`3`\n*Вывод:*\n`[3, 12, 50, 99]`",
+      "difficulty": "easy",
+      "starterCode": "# Создайте пустой список, добавьте 4 числа, отсортируйте и выведите\n",
+      "solutionCode": "numbers = []\nfor _ in range(4):\n    num = int(input())\n    numbers.append(num)\nnumbers.sort()\nprint(numbers)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Создайте пустой список: numbers = [].",
+        "В цикле for _ in range(4): считывайте число int(input()) и добавляйте: numbers.append(num).",
+        "Отсортируйте: numbers.sort().",
+        "Напечатайте: print(numbers)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-4-1-1",
+          "stdin": "50\n12\n99\n3\n",
+          "expectedStdout": "[3, 12, 50, 99]\n",
+          "description": "Сортировка четырёх чисел",
+          "isHidden": false
+        },
+        {
+          "id": "tc-5-4-1-2",
+          "stdin": "1\n2\n3\n4\n",
+          "expectedStdout": "[1, 2, 3, 4]\n",
+          "description": "Уже отсортированные числа",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-4-2",
+      "type": "code",
+      "title": "Задание 2: Удаление из очереди",
+      "instruction": "Задан начальный список участников очереди:\n`queue = [\"Анна\", \"Борис\", \"Виктор\", \"Галина\"]`\n\nПрограмма считывает с клавиатуры одно имя.\nЕсли это имя присутствует в списке очереди (`if name in queue:`), удалите его методом `.remove(name)`.\nЗатем выведите получившийся список функцией `print(queue)`.\n\n*Пример ввода:*\n`Борис`\n*Вывод:*\n`['Анна', 'Виктор', 'Галина']`",
+      "difficulty": "easy",
+      "starterCode": "queue = [\"Анна\", \"Борис\", \"Виктор\", \"Галина\"]\n# Считайте имя, удалите его из queue если оно есть, и выведите queue\n",
+      "solutionCode": "queue = [\"Анна\", \"Борис\", \"Виктор\", \"Галина\"]\nname = input()\nif name in queue:\n    queue.remove(name)\nprint(queue)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте имя: name = input().",
+        "Проверьте наличие имени: if name in queue: queue.remove(name)",
+        "Напечатайте: print(queue)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-4-2-1",
+          "stdin": "Борис\n",
+          "expectedStdout": "['Анна', 'Виктор', 'Галина']\n",
+          "description": "Удаление Бориса",
+          "isHidden": false
+        },
+        {
+          "id": "tc-5-4-2-2",
+          "stdin": "Дмитрий\n",
+          "expectedStdout": "['Анна', 'Борис', 'Виктор', 'Галина']\n",
+          "description": "Имени нет в списке, очередь без изменений",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-4-3",
+      "type": "find_error",
+      "title": "Задание 3: Спасение от None",
+      "instruction": "Программист написал `nums = nums.append(4)`, из-за чего переменная `nums` стала равна `None`. Исправьте ошибку, чтобы список содержал `[1, 2, 3, 4]`!",
+      "difficulty": "easy",
+      "starterCode": "nums = [1, 2, 3]\n# Исправьте эту строчку:\nnums = nums.append(4)\nprint(nums)\n",
+      "solutionCode": "nums = [1, 2, 3]\nnums.append(4)\nprint(nums)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Не присваивайте результат nums.append(4) обратно в nums.",
+        "Просто напишите: nums.append(4)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-4-3-1",
+          "stdin": "",
+          "expectedStdout": "[1, 2, 3, 4]\n",
+          "description": "Корректное добавление числа 4",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-4-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что вернёт метод pop()?",
+      "instruction": "Определите, какое значение будет напечатано в результате выполнения кода:",
+      "difficulty": "easy",
+      "starterCode": "stack = [10, 20, 30]\nlast = stack.pop()\nprint(last)",
+      "solutionCode": "30",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Метод pop() без аргументов удаляет самый последний элемент списка и возвращает его.",
+        "Последним элементом было число 30."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-4-4-1",
+          "stdin": "",
+          "expectedStdout": "30\n",
+          "description": "Извлечённый элемент",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-5-4-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Добавление в конец",
+      "instruction": "Заполните пропуск именем метода, который добавляет новый элемент в конец списка.",
+      "difficulty": "easy",
+      "starterCode": "animals = [\"кот\", \"собака\"]\nanimals._______(\"хомяк\")\nprint(len(animals))",
+      "solutionCode": "animals = [\"кот\", \"собака\"]\nanimals.append(\"хомяк\")\nprint(len(animals))",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Метод добавления в конец называется append."
+      ],
+      "testCases": [
+        {
+          "id": "tc-5-4-5-1",
+          "stdin": "",
+          "expectedStdout": "3\n",
+          "description": "Проверка append",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

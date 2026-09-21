@@ -1,0 +1,221 @@
+{
+  "id": "lesson-6-3",
+  "moduleId": "module-6",
+  "title": "Возврат значения: оператор return",
+  "description": "Печать (print) против возврата (return): как получить результат вычислений обратно в программу, почему функции без return возвращают None и мгновенный выход по return.",
+  "estimatedMinutes": 25,
+  "stepikLessonUrl": "https://stepik.org/lesson/265103/step/1",
+
+  "theoryMarkdown": "# Результат работы: Оператор return\n\nЭто одна из самых важных тем в программировании. Практически каждый новичок сначала путает две команды: **`print()`** и **`return`**.\nДавайте разберёмся раз и навсегда!\n\n---\n\n## 1. В чём разница между `print()` и `return`?\n\n> 💡 **Аналогия из жизни:**\n> - **`print()`** — это объявление по громкоговорителю на вокзале. Звук раздался, люди услышали слова, но в карман этот звук не положишь — он растворился в воздухе.\n> - **`return`** — это банкомат, который выдаёт вам в руки настоящую хрустящую купюру. Вы можете положить её в кошелёк (переменную), пойти в магазин и купить на неё продукты (передать в другие расчёты).\n\n```python\n# Вариант с print (плохой для расчётов): результат теряется!\ndef bad_add(a, b):\n    print(a + b)\n\nx = bad_add(2, 3)  # На экране напечатается 5, но в x запишется None!\n# print(x * 2)    # ОШИБКА TypeError! Нельзя умножать None на 2!\n\n# Вариант с return (правильный): результат возвращается в программу!\ndef good_add(a, b):\n    return a + b\n\nx = good_add(2, 3)  # В x запишется число 5!\nprint(x * 2)        # 10 — всё отлично работает!\n```\n\n---\n\n## 2. Специальное значение `None`\n\nЕсли функция завершила свою работу и в ней не было команды `return` (или было написано просто `return` без значения), она **всегда автоматически возвращает `None`** (в переводе — «ничего / пустота»).\n\n---\n\n## 3. Мгновенный выход из функции\n\nКак только интерпретатор Python доходит до оператора `return`, выполнение функции **мгновенно прекращается**, а значение отдаётся вызвавшему коду. Все команды, написанные в этой ветке ниже `return`, выполняться не будут:\n\n```python\ndef get_sign(number):\n    if number > 0:\n        return \"Положительное\"\n    if number < 0:\n        return \"Отрицательное\"\n    return \"Ноль\"\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-6-3-1",
+      "title": "Пример 1: Функция возведения в квадрат",
+      "description": "Возвращаем число и используем его в сложном выражении.",
+      "code": "def square(n):\n    return n * n\n\na = square(4)  # 16\nb = square(3)  # 9\nprint(\"a + b =\", a + b)  # 25"
+    },
+    {
+      "id": "ex-6-3-2",
+      "title": "Пример 2: Проверка чётности числа (возврат bool)",
+      "description": "Функция возвращает True или False.",
+      "code": "def is_even(num):\n    return num % 2 == 0\n\nprint(\"4 чётное?\", is_even(4))\nprint(\"7 чётное?\", is_even(7))"
+    },
+    {
+      "id": "ex-6-3-3",
+      "title": "Пример 3: Поиск максимума из двух чисел",
+      "description": "Используем условный оператор и несколько точек return.",
+      "code": "def my_max(a, b):\n    if a > b:\n        return a\n    return b\n\nprint(\"Большее из 15 и 27:\", my_max(15, 27))"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "def double(x):\n    print(x * 2)\n\nres = double(5) + 10",
+      "errorType": "TypeError",
+      "explanation": "Функция double ничего не возвращает (return отсутствует), поэтому res = None + 10 приводит к ошибке: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'.",
+      "fixCode": "def double(x):\n    return x * 2\n\nres = double(5) + 10  # 20"
+    },
+    {
+      "mistakeCode": "def calc(a):\n    return a * 2\n    print(\"Готово!\")  # Никогда не выполнится!",
+      "errorType": "UnreachableCode",
+      "explanation": "После выполнения оператора return функция немедленно завершается. Строчки под return на том же уровне отступа никогда не выполнятся.",
+      "fixCode": "def calc(a):\n    print(\"Готово!\")\n    return a * 2"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-6-3-1",
+      "question": "Что вернёт функция, в теле которой нет оператора return?",
+      "options": ["0", "None", "Пустую строку \"\"", "False"],
+      "correctIndices": [1],
+      "explanation": "По умолчанию любая функция в Python без явного return возвращает специальный объект None."
+    },
+    {
+      "id": "q-6-3-2",
+      "question": "Что произойдёт в теле функции при выполнении инструкции return x?",
+      "options": [
+        "Функция мгновенно вернёт значение x и немедленно прекратит выполнение",
+        "Функция продолжит выполнять все строки до конца",
+        "Произойдёт перезапуск цикла",
+        "x напечатается в терминал"
+      ],
+      "correctIndices": [0],
+      "explanation": "Оператор return сразу же завершает работу функции и передаёт результат в точку вызова."
+    },
+    {
+      "id": "q-6-3-3",
+      "question": "Какую команду нужно использовать внутри функции, чтобы её результат можно было сохранить в переменную и использовать в формулах?",
+      "options": ["print", "return", "send", "give"],
+      "correctIndices": [1],
+      "explanation": "Только return возвращает данные наружу для сохранения в переменную или математических операций."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-6-3-1",
+      "type": "code",
+      "title": "Задание 1: Функция вычисления куба",
+      "instruction": "Напишите функцию `cube(n)`, которая принимает одно число `n` и **возвращает** его куб (число в третьей степени `n ** 3`). Внутри функции не должно быть команды `print`!\n\nСчитайте с клавиатуры одно целое число, вызовите функцию `cube()` и напечатайте возвращённый результат.\n\n*Пример ввода:*\n`3`\n*Вывод:*\n`27`",
+      "difficulty": "easy",
+      "starterCode": "# Напишите функцию cube(n), считайте число и выведите результат её вызова\n",
+      "solutionCode": "def cube(n):\n    return n ** 3\n\nx = int(input())\nprint(cube(x))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Объявите функцию: def cube(n): return n ** 3",
+        "Считайте число: x = int(input()).",
+        "Выведите результат: print(cube(x))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-3-1-1",
+          "stdin": "3\n",
+          "expectedStdout": "27\n",
+          "description": "Куб числа 3",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-3-1-2",
+          "stdin": "0\n",
+          "expectedStdout": "0\n",
+          "description": "Куб числа 0",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-3-1-3",
+          "stdin": "5\n",
+          "expectedStdout": "125\n",
+          "description": "Куб числа 5",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-6-3-2",
+      "type": "code",
+      "title": "Задание 2: Предикат положительного числа",
+      "instruction": "Создайте функцию `is_positive(num)`, которая возвращает булево значение `True`, если число строго больше нуля, и `False`, если число меньше либо равно нулю.\n\nСчитайте одно целое число с клавиатуры, передайте его в функцию и напечатайте полученный результат (`True` или `False`).\n\n*Пример ввода:*\n`42`\n*Вывод:*\n`True`",
+      "difficulty": "easy",
+      "starterCode": "# Создайте функцию is_positive(num) и напечатайте результат её работы\n",
+      "solutionCode": "def is_positive(num):\n    return num > 0\n\nx = int(input())\nprint(is_positive(x))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Выражение num > 0 само по себе возвращает True или False.",
+        "Поэтому тело функции может быть в одну строчку: return num > 0.",
+        "Считайте число x = int(input()) и напечатайте print(is_positive(x))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-3-2-1",
+          "stdin": "42\n",
+          "expectedStdout": "True\n",
+          "description": "Положительное число",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-3-2-2",
+          "stdin": "-5\n",
+          "expectedStdout": "False\n",
+          "description": "Отрицательное число",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-3-2-3",
+          "stdin": "0\n",
+          "expectedStdout": "False\n",
+          "description": "Ноль не положителен",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-6-3-3",
+      "type": "find_error",
+      "title": "Задание 3: Замените print на return",
+      "instruction": "Функция `multiply(a, b)` печатает результат вместо возврата, из-за чего строка `multiply(3, 4) + 10` падает с ошибкой сложения `NoneType` и `int`. Замените `print` на `return` внутри функции!",
+      "difficulty": "easy",
+      "starterCode": "def multiply(a, b):\n    # Исправьте эту строчку:\n    print(a * b)\n\nresult = multiply(3, 4) + 10\nprint(result)\n",
+      "solutionCode": "def multiply(a, b):\n    return a * b\n\nresult = multiply(3, 4) + 10\nprint(result)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Замените print(a * b) на return a * b."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-3-3-1",
+          "stdin": "",
+          "expectedStdout": "22\n",
+          "description": "3 * 4 + 10 = 22",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-3-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что вернёт условие?",
+      "instruction": "Что будет выведено на экран при выполнении кода с вызовом функции `check(-7)`?",
+      "difficulty": "easy",
+      "starterCode": "def check(x):\n    if x < 0:\n        return \"Минус\"\n    return \"Плюс\"\n\nprint(check(-7))",
+      "solutionCode": "Минус",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "-7 меньше 0, условие x < 0 истинно.",
+        "Сработает return 'Минус', и функция моментально завершится."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-3-4-1",
+          "stdin": "",
+          "expectedStdout": "Минус\n",
+          "description": "Вывод слова Минус",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-3-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Ключевое слово возврата",
+      "instruction": "Заполните пропуск командой, которая возвращает значение удвоенного числа наружу.",
+      "difficulty": "easy",
+      "starterCode": "def get_double(n):\n    ______ n * 2\n\nx = get_double(7)\nprint(x)",
+      "solutionCode": "def get_double(n):\n    return n * 2\n\nx = get_double(7)\nprint(x)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Для возврата значения используется оператор return."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-3-5-1",
+          "stdin": "",
+          "expectedStdout": "14\n",
+          "description": "Удвоение числа",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

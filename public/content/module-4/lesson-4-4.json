@@ -1,0 +1,219 @@
+{
+  "id": "lesson-4-4",
+  "moduleId": "module-4",
+  "title": "Операторы break и continue",
+  "description": "Ручное управление потоком цикла: экстренный выход с помощью break и мгновенный переход к следующему шагу с помощью continue.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265094/step/1",
+
+  "theoryMarkdown": "# Пульт управления циклом: break и continue\n\nОбычно цикл добросовестно повторяет все команды своего тела от начала и до конца на каждом круге. Но в реальных задачах часто нужно вмешаться в этот процесс:\n- Нашли то, что искали? Хватит крутиться — **остановись прямо сейчас!**\n- Попался неподходящий элемент? **Пропусти его и сразу переходи к следующему!**\n\nДля этого в Python есть два специальных оператора: **`break`** и **`continue`**.\n\n---\n\n## 🛑 Оператор `break` (Стоп-кран)\n\nКоманда `break` **немедленно и навсегда прерывает работу цикла**. Программа бросает все оставшиеся команды в теле цикла и сразу переходит к первой строчке, написанной ПОСЛЕ цикла.\n\n> 💡 **Аналогия:** Пожарная тревога в кинотеатре. Сеанс не продолжается — все немедленно встают и покидают зал.\n\n```python\nfor i in range(1, 10):\n    if i == 5:\n        print(\"Найдена 5! Прерываем цикл.\")\n        break\n    print(i)\n# Напечатает: 1, 2, 3, 4 и сообщение. Числа 6-9 уже не появятся!\n```\n\nОчень популярный приём — бесконечный цикл `while True:` с выходом через `break`:\n```python\nwhile True:\n    cmd = input(\"Введите команду: \")\n    if cmd == \"стоп\":\n        break\n    print(\"Выполняю:\", cmd)\n```\n\n---\n\n## ⏭️ Оператор `continue` (Пропуск шага)\n\nКоманда `continue` **завершает ТОЛЬКО текущую итерацию** и мгновенно переходит к следующему шагу цикла.\n\n> 💡 **Аналогия:** Пропуск трека в аудиоплеере (кнопка Next). Плейлист не выключается, просто нелюбимая песня перематывается к следующей.\n\n```python\nfor i in range(1, 6):\n    if i == 3:\n        continue  # Пропускаем тройку!\n    print(i)\n# Напечатает: 1, 2, 4, 5 (тройка была пропущена)\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-4-4-1",
+      "title": "Пример 1: Поиск первого подходящего числа (break)",
+      "description": "Находим первое число больше 20, которое делится на 7.",
+      "code": "for n in range(21, 100):\n    if n % 7 == 0:\n        print(\"Первое число:\", n)\n        break"
+    },
+    {
+      "id": "ex-4-4-2",
+      "title": "Пример 2: Печать только нечётных чисел (continue)",
+      "description": "Если число делится на 2 без остатка — пропускаем его.",
+      "code": "for i in range(1, 10):\n    if i % 2 == 0:\n        continue\n    print(\"Нечётное:\", i)"
+    },
+    {
+      "id": "ex-4-4-3",
+      "title": "Пример 3: Диалог до правильного пароля",
+      "description": "Классический паттерн while True + break.",
+      "code": "while True:\n    pin = input(\"Введите PIN-код: \")\n    if pin == \"4321\":\n        print(\"PIN принят!\")\n        break\n    print(\"Неверный PIN, попробуйте снова.\")"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "for i in range(1, 6):\n    if i == 3:\n        break\n    print(i)\n# Автор хотел пропустить тройку, но цикл остановился совсем!",
+      "errorType": "BreakInsteadOfContinue",
+      "explanation": "Оператор break полностью глушит весь цикл! Для пропуска только одного конкретного шага используйте continue.",
+      "fixCode": "for i in range(1, 6):\n    if i == 3:\n        continue\n    print(i)"
+    },
+    {
+      "mistakeCode": "while True:\n    break\n    print(\"Это никогда не напечатается\")",
+      "errorType": "UnreachableCode",
+      "explanation": "Команды, написанные в теле цикла сразу после break или continue, никогда не будут выполнены (мёртвый код).",
+      "fixCode": "while True:\n    print(\"Это будет напечатано\")\n    break"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-4-4-1",
+      "question": "В чём главное отличие break от continue?",
+      "options": [
+        "break завершает весь цикл целиком, а continue пропускает только текущий шаг",
+        "break работает только с while, а continue — только с for",
+        "continue останавливает программу, а break перезагружает компьютер",
+        "Никакой разницы, это полные синонимы"
+      ],
+      "correctIndices": [0],
+      "explanation": "break полностью прерывает цикл и выходит из него. continue лишь завершает текущую итерацию и переходит к следующей."
+    },
+    {
+      "id": "q-4-4-2",
+      "question": "Что напечатает код: for i in range(5): if i == 2: break; print(i)?",
+      "options": ["0, 1, 2, 3, 4", "0, 1", "0, 1, 3, 4", "2"],
+      "correctIndices": [1],
+      "explanation": "Напечатается 0, затем 1. При i == 2 сработает break, который моментально прервёт цикл."
+    },
+    {
+      "id": "q-4-4-3",
+      "question": "Что произойдёт при вызове continue внутри цикла while?",
+      "options": [
+        "Цикл закроется",
+        "Управление сразу вернётся к проверке условия while для следующего круга",
+        "Случится ошибка SyntaxError",
+        "Программа удалит счётчик"
+      ],
+      "correctIndices": [1],
+      "explanation": "continue пропускает всё, что осталось в теле цикла, и сразу переходит к следующей проверке условия."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-4-4-1",
+      "type": "code",
+      "title": "Задание 1: Первый общий делитель",
+      "instruction": "Найдите первое положительное целое число, строго большее 100, которое делится без остатка и на 11, и на 13 одновременно.\nКак только такое число найдено, напечатайте его и немедленно остановите цикл с помощью оператора `break`.",
+      "difficulty": "easy",
+      "starterCode": "# Найдите первое число > 100, делящееся на 11 и на 13\n",
+      "solutionCode": "for num in range(101, 10000):\n    if num % 11 == 0 and num % 13 == 0:\n        print(num)\n        break\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Запустите цикл for num in range(101, 2000):",
+        "Условие делимости: if num % 11 == 0 and num % 13 == 0:",
+        "Внутри условия напечатайте число print(num) и вызовите break."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-4-1-1",
+          "stdin": "",
+          "expectedStdout": "143\n",
+          "description": "Первое число больше 100, кратное 11 и 13 (11 * 13 = 143)",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-4-2",
+      "type": "code",
+      "title": "Задание 2: Сумма только положительных",
+      "instruction": "Пользователь вводит целые числа по одному на строке.\n- Если число отрицательное (`num < 0`), пропустите его с помощью `continue` (не добавляя в сумму).\n- Если введено число `0`, немедленно прервите ввод с помощью `break`.\n- Если число положительное, прибавьте его к общей сумме.\nПосле завершения цикла выведите итоговую сумму.\n\n*Пример ввода:*\n`10`\n`-5`\n`20`\n`-100`\n`5`\n`0`\n*Вывод:*\n`35` (10 + 20 + 5)",
+      "difficulty": "medium",
+      "starterCode": "# Напишите цикл с обработкой положительных, отрицательных и нуля\n",
+      "solutionCode": "total = 0\nwhile True:\n    num = int(input())\n    if num == 0:\n        break\n    if num < 0:\n        continue\n    total += num\nprint(total)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Используйте бесконечный цикл while True:",
+        "Считывайте число: num = int(input()).",
+        "Если num == 0: break.",
+        "Если num < 0: continue.",
+        "Иначе total += num.",
+        "После цикла print(total)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-4-2-1",
+          "stdin": "10\n-5\n20\n-100\n5\n0\n",
+          "expectedStdout": "35\n",
+          "description": "Положительные и отрицательные числа",
+          "isHidden": false
+        },
+        {
+          "id": "tc-4-4-2-2",
+          "stdin": "-1\n-2\n-3\n0\n",
+          "expectedStdout": "0\n",
+          "description": "Только отрицательные числа",
+          "isHidden": false
+        },
+        {
+          "id": "tc-4-4-2-3",
+          "stdin": "100\n0\n",
+          "expectedStdout": "100\n",
+          "description": "Одно положительное число",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-4-4-3",
+      "type": "find_error",
+      "title": "Задание 3: Пропустить тройку",
+      "instruction": "Программа должна напечатать числа от 1 до 5, кроме числа 3 (`1 2 4 5`). Но разработчик по ошибке использовал `break` вместо `continue`, из-за чего цикл оборвался. Исправьте ошибку!",
+      "difficulty": "easy",
+      "starterCode": "for i in range(1, 6):\n    if i == 3:\n        break\n    print(i)\n",
+      "solutionCode": "for i in range(1, 6):\n    if i == 3:\n        continue\n    print(i)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "break завершает весь цикл, поэтому числа 4 и 5 не печатаются.",
+        "Замените break на continue, чтобы пропустить только число 3."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-4-3-1",
+          "stdin": "",
+          "expectedStdout": "1\n2\n4\n5\n",
+          "description": "Вывод 1, 2, 4, 5 без тройки",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-4-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что выведет прерванный цикл?",
+      "instruction": "Посчитайте сумму чисел, накопленную в переменной `s`, учитывая момент срабатывания `break`.",
+      "difficulty": "medium",
+      "starterCode": "s = 0\nfor i in range(1, 10):\n    if i == 4:\n        break\n    s += i\nprint(s)",
+      "solutionCode": "6",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "При i = 1: s = 0 + 1 = 1.",
+        "При i = 2: s = 1 + 2 = 3.",
+        "При i = 3: s = 3 + 3 = 6.",
+        "При i = 4 срабатывает break, цикл моментально прекращается. s остаётся 6."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-4-4-1",
+          "stdin": "",
+          "expectedStdout": "6\n",
+          "description": "Сумма 1 + 2 + 3 = 6",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-4-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Пропуск чётных чисел",
+      "instruction": "Заполните пропуск оператором, который позволит пропустить чётные числа и вывести только нечётные (`1 3 5`).",
+      "difficulty": "easy",
+      "starterCode": "for i in range(1, 6):\n    if i % 2 == 0:\n        ________\n    print(i)",
+      "solutionCode": "for i in range(1, 6):\n    if i % 2 == 0:\n        continue\n    print(i)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Нужен оператор пропуска текущей итерации.",
+        "Это слово continue."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-4-5-1",
+          "stdin": "",
+          "expectedStdout": "1\n3\n5\n",
+          "description": "Печать только нечётных чисел",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

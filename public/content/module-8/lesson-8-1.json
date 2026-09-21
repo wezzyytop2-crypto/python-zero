@@ -1,0 +1,201 @@
+{
+  "id": "lesson-8-1",
+  "moduleId": "module-8",
+  "title": "Обработка ошибок: конструкция try-except",
+  "description": "Непотопляемые программы: как перехватывать исключения (ZeroDivisionError, ValueError), чтобы программа не падала, блок else и гарантированный finally.",
+  "estimatedMinutes": 25,
+  "stepikLessonUrl": "https://stepik.org/lesson/265111/step/1",
+
+  "theoryMarkdown": "# Подушка безопасности: Исключения try-except\n\nДаже в самом идеальном коде случаются непредвиденные ситуации. Пользователь может ввести слово «сто» вместо цифры `100`, попытаться разделить число на ноль или запросить файл, который удалили с диска.\n\nВ таких случаях программа выбрасывает **исключение (Exception)** и с грохотом аварийно завершается. Но профессиональные программы не должны падать!\n\n> 💡 **Аналогия:** Трюки каскадёра в цирке. Под куполом всегда натянута страховочная сетка: даже если гимнаст сорвётся, сетка мягко поймает его, и представление продолжится без травм.\n\n---\n\n## 1. Конструкция `try-except`\n\n```python\ntry:\n    # В блоке try пишем опасный код, где возможна ошибка:\n    num = int(input(\"Введите число: \"))\n    print(\"100 разделить на число:\", 100 / num)\nexcept ZeroDivisionError:\n    # Если пользователь ввёл 0 — ловим деление на ноль:\n    print(\"Ошибка: на ноль делить нельзя!\")\nexcept ValueError:\n    # Если пользователь ввёл буквы вместо цифр:\n    print(\"Ошибка: введено не число!\")\n```\nТеперь, что бы ни ввёл пользователь, программа вежливо объяснит ошибку и продолжит свою работу!\n\n---\n\n## 2. Блоки `else` и `finally`\n\n- **`else`** — выполняется только в том случае, если в блоке `try` **не возникло никаких ошибок**.\n- **`finally`** — выполняется **ВСЕГДА** в любом случае, была ошибка или нет (часто используется для закрытия соединений и файлов):\n\n```python\ntry:\n    x = int(input())\nexcept ValueError:\n    print(\"Это не число\")\nelse:\n    print(\"Успех, число введено верно:\", x)\nfinally:\n    print(\"Проверка завершена!\")\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-8-1-1",
+      "title": "Пример 1: Безопасное деление",
+      "description": "Перехват деления на ноль.",
+      "code": "def safe_divide(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return \"Деление на ноль невозможно!\"\n\nprint(safe_divide(10, 2))  # 5.0\nprint(safe_divide(10, 0))  # Деление на ноль невозможно!"
+    },
+    {
+      "id": "ex-8-1-2",
+      "title": "Пример 2: Защищённый ввод числа",
+      "description": "Программа настойчиво просит ввести число, пока пользователь не введёт корректное значение.",
+      "code": "def get_number():\n    while True:\n        try:\n            val = int(input(\"Введите целое число: \"))\n            return val\n        except ValueError:\n            print(\"Это не целое число, попробуйте ещё раз!\")"
+    },
+    {
+      "id": "ex-8-1-3",
+      "title": "Пример 3: Блок finally для завершения работы",
+      "description": "Код в finally выполняется всегда.",
+      "code": "try:\n    print(\"Шаг 1: Подключение...\")\n    res = 10 / 0\nexcept ZeroDivisionError:\n    print(\"Шаг 2: Обработка сбоя\")\nfinally:\n    print(\"Шаг 3: Соединение закрыто\")"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "try:\n    # Опасный код\n    x = 1 / 0\nexcept:\n    pass  # Никогда так не делайте!",
+      "errorType": "BareExcept",
+      "explanation": "Пустой 'голый' except скрывает абсолютно все ошибки, включая опечатки в именах переменных и системные сигналы прерывания. Всегда указывайте конкретный тип ошибки: except ZeroDivisionError:.",
+      "fixCode": "try:\n    x = 1 / 0\nexcept ZeroDivisionError:\n    print(\"Деление на ноль перехвачено\")"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-8-1-1",
+      "question": "Какой блок в конструкции try-except выполняется ВСЕГДА, независимо от того, произошла ошибка или нет?",
+      "options": ["finally", "else", "except", "catch"],
+      "correctIndices": [0],
+      "explanation": "Блок finally выполняется гарантированно в любом исходе выполнения блока try."
+    },
+    {
+      "id": "q-8-1-2",
+      "question": "Какое исключение выбрасывает Python при попытке выполнить int('Привет')?",
+      "options": ["ValueError", "TypeError", "ZeroDivisionError", "KeyError"],
+      "correctIndices": [0],
+      "explanation": "Попытка преобразовать неподходящую строку в число вызывает ошибку ValueError."
+    },
+    {
+      "id": "q-8-1-3",
+      "question": "Когда выполняется блок else в конструкции try-except-else?",
+      "options": [
+        "Только если в блоке try НЕ возникло ошибок",
+        "Только если возникла неизвестная ошибка",
+        "Вместо блока finally",
+        "Никогда не выполняется"
+      ],
+      "correctIndices": [0],
+      "explanation": "Блок else срабатывает только при успешном завершении try без единого исключения."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-8-1-1",
+      "type": "code",
+      "title": "Задание 1: Безопасное целочисленное деление",
+      "instruction": "Программа считывает два целых числа: делимое `A` и делитель `B` (по одному на строке).\nПопробуйте выполнить целочисленное деление `A // B`.\nЕсли возникает ошибка деления на ноль (`ZeroDivisionError`), выведите сообщение: `Ошибка: деление на ноль`.\nВ противном случае напечатайте результат деления.\n\n*Пример ввода:*\n`10`\n`0`\n*Вывод:*\n`Ошибка: деление на ноль`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте A и B, обработайте ZeroDivisionError при делении\n",
+      "solutionCode": "a = int(input())\nb = int(input())\ntry:\n    print(a // b)\nexcept ZeroDivisionError:\n    print(\"Ошибка: деление на ноль\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте a = int(input()) и b = int(input()).",
+        "try: print(a // b)",
+        "except ZeroDivisionError: print('Ошибка: деление на ноль')"
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-1-1-1",
+          "stdin": "10\n0\n",
+          "expectedStdout": "Ошибка: деление на ноль\n",
+          "description": "Деление на ноль",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-1-1-2",
+          "stdin": "20\n4\n",
+          "expectedStdout": "5\n",
+          "description": "Корректное деление 20 // 4 = 5",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-1-2",
+      "type": "code",
+      "title": "Задание 2: Безопасное удвоение числа",
+      "instruction": "Программа считывает одну строку.\nПопробуйте преобразовать её в целое число с помощью `int(s)` и вывести удвоенное значение `num * 2`.\nЕсли строка не является числом (возникает `ValueError`), перехватите ошибку и выведите: `Некорректный ввод`.\n\n*Пример ввода:*\n`привет`\n*Вывод:*\n`Некорректный ввод`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте строку, попробуйте превратить в int и обработайте ValueError\n",
+      "solutionCode": "s = input()\ntry:\n    num = int(s)\n    print(num * 2)\nexcept ValueError:\n    print(\"Некорректный ввод\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте строку: s = input().",
+        "try: print(int(s) * 2)",
+        "except ValueError: print('Некорректный ввод')"
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-1-2-1",
+          "stdin": "привет\n",
+          "expectedStdout": "Некорректный ввод\n",
+          "description": "Ввод слова",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-1-2-2",
+          "stdin": "25\n",
+          "expectedStdout": "50\n",
+          "description": "Корректное число 25 * 2 = 50",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-1-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте тип исключения",
+      "instruction": "Код пытается перехватить деление на ноль как `ValueError`, из-за чего программа всё равно падает с `ZeroDivisionError`. Исправьте тип перехватываемого исключения!",
+      "difficulty": "easy",
+      "starterCode": "try:\n    res = 50 / 0\n# Исправьте имя исключения:\nexcept ValueError:\n    print(\"Делить на ноль нельзя\")\n",
+      "solutionCode": "try:\n    res = 50 / 0\nexcept ZeroDivisionError:\n    print(\"Делить на ноль нельзя\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Деление на ноль порождает ZeroDivisionError. Замените ValueError на ZeroDivisionError."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-1-3-1",
+          "stdin": "",
+          "expectedStdout": "Делить на ноль нельзя\n",
+          "description": "Перехват ZeroDivisionError",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-1-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что выведет try-except-finally?",
+      "instruction": "Определите точный вывод программы с блоком finally:",
+      "difficulty": "easy",
+      "starterCode": "try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print(\"Сбой\")\nfinally:\n    print(\"Конец\")",
+      "solutionCode": "Сбой\nКонец",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Сначала срабатывает блок except и печатает 'Сбой'.",
+        "Затем гарантированно срабатывает блок finally и печатает 'Конец'."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-1-4-1",
+          "stdin": "",
+          "expectedStdout": "Сбой\nКонец\n",
+          "description": "Вывод Сбой и Конец",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-1-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Ключевое слово перехвата",
+      "instruction": "Заполните пропуск ключевым словом для ловли исключения.",
+      "difficulty": "easy",
+      "starterCode": "try:\n    n = int(\"abc\")\n______ ValueError:\n    print(\"Ошибка\")",
+      "solutionCode": "try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"Ошибка\")",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Перехват ошибок осуществляется словом except."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-1-5-1",
+          "stdin": "",
+          "expectedStdout": "Ошибка\n",
+          "description": "Ключевое слово except",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

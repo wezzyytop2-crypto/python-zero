@@ -1,0 +1,206 @@
+{
+  "id": "lesson-6-5",
+  "moduleId": "module-6",
+  "title": "Значения аргументов по умолчанию",
+  "description": "Необязательные параметры функций: как задавать значения по умолчанию (def f(x, step=1)), строгое правило их порядка и именованные вызовы.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265105/step/1",
+
+  "theoryMarkdown": "# Гибкие функции: Значения по умолчанию\n\nИногда параметры функции в большинстве случаев принимают одно и то же привычное значение. Например, когда мы возводим число в степень, чаще всего мы возводим во вторую степень (квадрат). Или когда приветствуем пользователя, стандартное приветствие — «Привет».\n\nВ Python можно задать **значение по умолчанию (default argument)** прямо в круглых скобках при создании функции!\n\n---\n\n## 1. Как это работает\n\n```python\ndef power(base, exp=2):  # exp по умолчанию равен 2\n    return base ** exp\n\n# Если передать только 1 аргумент, exp возьмёт значение по умолчанию 2:\nprint(power(5))     # 25 (5 ** 2)\n\n# Если передать 2 аргумента, дефолтное значение просто перезапишется:\nprint(power(2, 3))  # 8  (2 ** 3)\n```\nТеперь функция стала гибкой: её можно вызывать как с одним числом, так и с двумя!\n\n---\n\n## 2. Железное правило порядка параметров!\n\n> ⚠️ **Главное синтаксическое правило:**\n> Все обязательные параметры ВСЕГДА должны стоять **ДО** параметров со значениями по умолчанию!\n\n- `def good(name, greeting=\"Привет\")` ✅ — отлично! Обязательное имя идёт первым.\n- `def bad(greeting=\"Привет\", name)` ❌ — **ОШИБКА `SyntaxError: non-default argument follows default argument`**! Python не поймёт, кому предназначается первый аргумент при вызове.\n\n---\n\n## 3. Именованные аргументы (Keyword Arguments)\n\nПри вызове функции можно явно указывать имена параметров. В таком случае их порядок вообще не имеет значения:\n```python\ndef profile(name, age, city=\"Москва\"):\n    print(f\"{name}, {age} лет, город {city}\")\n\n# Вызов с указанием имён параметров:\nprofile(age=20, name=\"Артём\")\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-6-5-1",
+      "title": "Пример 1: Персонализация приветствия",
+      "description": "Приветствие со стандартным обращением 'Привет'.",
+      "code": "def greet(name, phrase=\"Привет\"):\n    print(f\"{phrase}, {name}!\")\n\ngreet(\"Михаил\")               # Привет, Михаил!\ngreet(\"Анна\", \"Доброе утро\")   # Доброе утро, Анна!"
+    },
+    {
+      "id": "ex-6-5-2",
+      "title": "Пример 2: Округление числа",
+      "description": "Округление до 2 знаков по умолчанию.",
+      "code": "def round_price(value, digits=2):\n    return round(value, digits)\n\nprint(round_price(19.95432))     # 19.95 (по умолчанию 2 знака)\nprint(round_price(19.95432, 0))  # 20.0"
+    },
+    {
+      "id": "ex-6-5-3",
+      "title": "Пример 3: Повторение разделителя",
+      "description": "Символ разделителя задан по умолчанию.",
+      "code": "def line(length=20, symbol=\"-\"):\n    print(symbol * length)\n\nline()            # 20 дефисов: --------------------\nline(10, \"*\")      # 10 звёздочек: **********\nline(symbol=\"=\")  # 20 знаков равно: ===================="
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "def make_cake(flavor=\"шоколадный\", size):\n    print(flavor, size)",
+      "errorType": "SyntaxError",
+      "explanation": "Синтаксическая ошибка: параметр без значения по умолчанию (size) не может стоять после параметра со значением по умолчанию (flavor). Поменяйте их местами: make_cake(size, flavor='шоколадный').",
+      "fixCode": "def make_cake(size, flavor=\"шоколадный\"):\n    print(flavor, size)"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-6-5-1",
+      "question": "Какое значение получит параметр step при вызове f(10), если функция объявлена как def f(x, step=1):?",
+      "options": ["1", "10", "None", "Ошибка TypeError"],
+      "correctIndices": [0],
+      "explanation": "Так как второй аргумент не был передан при вызове, параметр step принимает своё значение по умолчанию (1)."
+    },
+    {
+      "id": "q-6-5-2",
+      "question": "Какое из следующих объявлений функции вызовет синтаксическую ошибку SyntaxError?",
+      "options": [
+        "def create(role=\"user\", name):",
+        "def create(name, role=\"user\"):",
+        "def create(name=\"Гость\", role=\"user\"):",
+        "def create(name, role):"
+      ],
+      "correctIndices": [0],
+      "explanation": "Параметры со значением по умолчанию обязаны располагаться строго после всех обязательных параметров."
+    },
+    {
+      "id": "q-6-5-3",
+      "question": "Можно ли при вызове функции передавать аргументы в произвольном порядке?",
+      "options": [
+        "Да, если явно указывать имена параметров: f(y=20, x=10)",
+        "Нет, порядок параметров всегда строго фиксирован",
+        "Только если все аргументы строковые",
+        "Только внутри циклов"
+      ],
+      "correctIndices": [0],
+      "explanation": "При использовании именованных аргументов (keyword arguments) порядок передачи не имеет значения."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-6-5-1",
+      "type": "code",
+      "title": "Задание 1: Функция повтора слова",
+      "instruction": "Напишите функцию `repeat_word(word, count=3)`, которая возвращает строку, в которой слово `word` повторено `count` раз через пробел (например, с помощью `' '.join([word] * count)` или `(word + ' ') * (count - 1) + word`).\n\nСчитайте одно слово `w` с клавиатуры и напечатайте результат вызова `repeat_word(w)` со значением `count` по умолчанию.\n\n*Пример ввода:*\n`Привет`\n*Вывод:*\n`Привет Привет Привет`",
+      "difficulty": "easy",
+      "starterCode": "# Объявите функцию repeat_word(word, count=3), считайте слово и вызовите её\n",
+      "solutionCode": "def repeat_word(word, count=3):\n    return \" \".join([word] * count)\n\nw = input()\nprint(repeat_word(w))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Заголовок: def repeat_word(word, count=3):",
+        "Собрать строку с повторением: return ' '.join([word] * count)",
+        "Считайте слово w = input() и напечатайте: print(repeat_word(w))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-5-1-1",
+          "stdin": "Привет\n",
+          "expectedStdout": "Привет Привет Привет\n",
+          "description": "Слово Привет 3 раза",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-5-1-2",
+          "stdin": "Python\n",
+          "expectedStdout": "Python Python Python\n",
+          "description": "Слово Python 3 раза",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-5-2",
+      "type": "code",
+      "title": "Задание 2: Персональное приветствие с титулом",
+      "instruction": "Создайте функцию `format_name(name, title=\"Гость\")`, которая возвращает строку вида:\n`f\"{title}: {name}\"`.\n\nСчитайте имя `n` с клавиатуры.\nВыведите результат двух вызовов функции:\n1. Сначала вызов только с именем (титул возьмётся по умолчанию)\n2. Затем вызов с именем `n` и титулом `\"Администратор\"`\n\n*Пример ввода:*\n`Алексей`\n*Вывод:*\n`Гость: Алексей`\n`Администратор: Алексей`",
+      "difficulty": "easy",
+      "starterCode": "# Создайте format_name(name, title=\"Гость\") и напечатайте результат двух вызовов\n",
+      "solutionCode": "def format_name(name, title=\"Гость\"):\n    return f\"{title}: {name}\"\n\nn = input()\nprint(format_name(n))\nprint(format_name(n, \"Администратор\"))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "def format_name(name, title='Гость'): return f'{title}: {name}'",
+        "Считайте n = input().",
+        "Выведите print(format_name(n)) и print(format_name(n, 'Администратор'))."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-5-2-1",
+          "stdin": "Алексей\n",
+          "expectedStdout": "Гость: Алексей\nАдминистратор: Алексей\n",
+          "description": "Форматирование имени Алексей",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-5-2-2",
+          "stdin": "Мария\n",
+          "expectedStdout": "Гость: Мария\nАдминистратор: Мария\n",
+          "description": "Форматирование имени Мария",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-5-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте порядок параметров",
+      "instruction": "Код вызывает ошибку `SyntaxError: non-default argument follows default argument`, потому что обязательный параметр `item` стоит после параметра по умолчанию. Поменяйте параметры местами в определении функции!",
+      "difficulty": "easy",
+      "starterCode": "# Исправьте порядок параметров в заголовке функции:\ndef print_order(discount=5, item=\"\"):\n    print(f\"{item}: скидка {discount}%\")\n\nprint_order(10, \"Пицца\")\n",
+      "solutionCode": "def print_order(discount, item):\n    print(f\"{item}: скидка {discount}%\")\n\nprint_order(10, \"Пицца\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Если discount передаётся первым, уберите значение по умолчанию или поставьте обязательный параметр item первым."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-5-3-1",
+          "stdin": "",
+          "expectedStdout": "Пицца: скидка 10%\n",
+          "description": "Корректный вызов заказа",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-5-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что вернёт умножение по умолчанию?",
+      "instruction": "Что будет напечатано в результате работы кода?",
+      "difficulty": "easy",
+      "starterCode": "def multiply(a, b=10):\n    return a * b\n\nprint(multiply(7))",
+      "solutionCode": "70",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Аргумент b не передан, поэтому b = 10.",
+        "Вычисляется a * b = 7 * 10 = 70."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-5-4-1",
+          "stdin": "",
+          "expectedStdout": "70\n",
+          "description": "7 * 10 = 70",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-5-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Знак присваивания по умолчанию",
+      "instruction": "Заполните пропуск знаком, используемым для задания значения параметра по умолчанию.",
+      "difficulty": "easy",
+      "starterCode": "def welcome(user___\"Гость\"):\n    print(\"Привет,\", user)\n\nwelcome()",
+      "solutionCode": "def welcome(user=\"Гость\"):\n    print(\"Привет,\", user)\n\nwelcome()",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Значение по умолчанию задаётся знаком равенства: user=\"Гость\"."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-5-5-1",
+          "stdin": "",
+          "expectedStdout": "Привет, Гость\n",
+          "description": "Вызов с дефолтным параметром",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

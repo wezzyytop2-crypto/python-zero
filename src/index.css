@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply bg-[#f7f7f7] text-slate-800 dark:bg-[#131f24] dark:text-slate-100 antialiased selection:bg-[#58cc02]/30 selection:text-[#58cc02];
+  }
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors;
+}
+
+/* CodeMirror adjustments */
+.cm-editor {
+  height: 100%;
+  font-family: 'Fira Code', Consolas, monospace !important;
+  font-size: 14px;
+}
+
+.cm-scroller {
+  font-family: inherit;
+}
+
+/* Duolingo-style Chunky 3D Buttons & Tactile Cards */
+@layer components {
+  /* Base 3D Button */
+  .btn-3d {
+    @apply relative font-black uppercase tracking-wider select-none transition-all duration-75 active:translate-y-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0 text-center;
+  }
+
+  /* Vibrant Green (Duolingo Signature / Success) */
+  .btn-3d-green {
+    @apply btn-3d bg-[#58cc02] hover:bg-[#61e002] text-white border-b-4 border-[#46a302] shadow-sm active:border-b-0;
+  }
+
+  /* Electric Blue (Duolingo Secondary Action) */
+  .btn-3d-blue {
+    @apply btn-3d bg-[#1cb0f6] hover:bg-[#2bd0ff] text-white border-b-4 border-[#1899d6] shadow-sm active:border-b-0;
+  }
+
+  /* Warm Orange / Fire (Streak / XP / Gold) */
+  .btn-3d-amber {
+    @apply btn-3d bg-[#ff9600] hover:bg-[#ffa726] text-white border-b-4 border-[#e58600] shadow-sm active:border-b-0;
+  }
+
+  /* Ruby Red (Stop / Error / Reset) */
+  .btn-3d-red {
+    @apply btn-3d bg-[#ff4b4b] hover:bg-[#ff6161] text-white border-b-4 border-[#ea2b2b] shadow-sm active:border-b-0;
+  }
+
+  /* Neutral Slate (Secondary / Cancel / White Card) */
+  .btn-3d-neutral {
+    @apply btn-3d bg-white dark:bg-[#1f2e35] hover:bg-slate-50 dark:hover:bg-[#2b3d46] text-slate-700 dark:text-slate-200 border-2 border-b-4 border-[#e5e5e5] dark:border-[#37464f] shadow-sm active:border-b-2;
+  }
+
+  /* Tactile Gamified Cards */
+  .card-3d {
+    @apply rounded-2xl border-2 border-b-4 border-[#e5e5e5] dark:border-[#37464f] bg-white dark:bg-[#1f2e35] transition-all;
+  }
+
+  .card-3d-hover {
+    @apply card-3d hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md hover:-translate-y-0.5;
+  }
+}
+
+/* Animations */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up-sheet {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up-sheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

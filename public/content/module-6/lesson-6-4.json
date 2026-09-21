@@ -1,0 +1,208 @@
+{
+  "id": "lesson-6-4",
+  "moduleId": "module-6",
+  "title": "Локальные и глобальные переменные",
+  "description": "Области видимости (Scope): почему переменные внутри функции исчезают после её завершения, как читать глобальные переменные и когда нужно слово global.",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265104/step/1",
+
+  "theoryMarkdown": "# Границы видимости: Локальные и глобальные переменные\n\nГде «живут» переменные и кто имеет к ним доступ? В Python это определяется понятием **области видимости (Scope)**.\n\n---\n\n## 1. Локальные переменные (Local Scope)\n\nЛюбая переменная, созданная внутри тела функции (а также её параметры), является **локальной**.\nОна существует **только во время работы функции**. Как только функция выполнила свой последний шаг, все её локальные переменные бесследно исчезают из памяти компьютера!\n\n> 💡 **Аналогия:** Локальная переменная — это вещи в вашей закрытой комнате. Никто с улицы не может заглянуть к вам и взять ваш дневник.\n\n```python\ndef my_func():\n    secret = 12345  # Локальная переменная!\n    print(\"Внутри функции:\", secret)\n\nmy_func()\n# print(secret)  # ОШИБКА NameError: name 'secret' is not defined!\n```\nСнаружи функции переменная `secret` просто не существует!\n\n---\n\n## 2. Глобальные переменные (Global Scope)\n\nПеременные, объявленные на самом верхнем уровне файла (без отступов), называются **глобальными**.\nОни видны везде, и любая функция может свободно **читать** их значение:\n\n```python\nAPP_NAME = \"СуперБраузер\"  # Глобальная переменная\n\ndef show_info():\n    print(\"Запущено приложение:\", APP_NAME)  # Читать можно без проблем!\n```\n\n---\n\n## 3. Ключевое слово `global`\n\nНо что если функция хочет не просто прочитать, а **изменить** глобальную переменную? По умолчанию Python запретит это, решив, что вы создаёте новую локальную переменную с таким же именем.\n\nЧтобы явно разрешить функции менять глобальную переменную, используют команду **`global`**:\n\n```python\nscore = 0\n\ndef add_score(points):\n    global score  # Сообщаем Python: мы хотим менять именно глобальный score!\n    score += points\n\nadd_score(50)\nprint(score)  # 50\n```\n\n> 💡 **Совет профессионала:** Старайтесь не злоупотреблять `global` без необходимости. Гораздо надёжнее передавать данные в функцию через аргументы и возвращать результат через `return`!",
+
+  "theoryExamples": [
+    {
+      "id": "ex-6-4-1",
+      "title": "Пример 1: Изоляция одинаковых имён",
+      "description": "Переменная x внутри функции и переменная x снаружи — это две совершенно разные переменные.",
+      "code": "x = 10  # Глобальный x\n\ndef change():\n    x = 99  # Локальный x (живёт только внутри)\n    print(\"Внутри change x =\", x)\n\nchange()\nprint(\"Снаружи x =\", x)  # Глобальный остался 10!"
+    },
+    {
+      "id": "ex-6-4-2",
+      "title": "Пример 2: Чтение глобальной константы",
+      "description": "Функция конвертирует рубли в копейки, используя общую константу.",
+      "code": "KOP_IN_RUB = 100\n\ndef to_kopecks(rubles):\n    return rubles * KOP_IN_RUB\n\nprint(\"5 рублей в копейках:\", to_kopecks(5))"
+    },
+    {
+      "id": "ex-6-4-3",
+      "title": "Пример 3: Счётчик вызовов через global",
+      "description": "Увеличиваем счётчик запусков функции.",
+      "code": "calls_count = 0\n\ndef track_call():\n    global calls_count\n    calls_count += 1\n    print(f\"Функция вызвана {calls_count} раз(а)\")\n\ntrack_call()\ntrack_call()\ntrack_call()"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "def calc():\n    res = 5 * 10\n\ncalc()\nprint(res)",
+      "errorType": "NameError",
+      "explanation": "Переменная res создана внутри функции calc() и уничтожена после её завершения. Снаружи она недоступна. Нужно вернуть её через return: return res.",
+      "fixCode": "def calc():\n    return 5 * 10\n\nres = calc()\nprint(res)"
+    },
+    {
+      "mistakeCode": "counter = 0\ndef step():\n    counter += 1  # UnboundLocalError!\nstep()",
+      "errorType": "UnboundLocalError",
+      "explanation": "Python видит присваивание counter += 1 и считает counter локальной переменной, но пытается прочитать её значение до присваивания. Добавьте строчку 'global counter'.",
+      "fixCode": "counter = 0\ndef step():\n    global counter\n    counter += 1\nstep()"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-6-4-1",
+      "question": "Что происходит с локальными переменными после того, как функция завершила работу?",
+      "options": [
+        "Они удаляются из оперативной памяти",
+        "Они автоматически становятся глобальными",
+        "Они записываются в файл на диск",
+        "Они сохраняются до конца работы программы"
+      ],
+      "correctIndices": [0],
+      "explanation": "Локальные переменные живут только во время вызова функции и уничтожаются сразу после выхода из неё."
+    },
+    {
+      "id": "q-6-4-2",
+      "question": "Что напечатает код: x = 5; def f(): x = 10; f(); print(x)?",
+      "options": ["5", "10", "None", "Ошибка NameError"],
+      "correctIndices": [0],
+      "explanation": "Внутри функции f() была создана локальная переменная x = 10, которая никак не затронула глобальную переменную x = 5."
+    },
+    {
+      "id": "q-6-4-3",
+      "question": "Какое ключевое слово позволяет перезаписать глобальную переменную изнутри функции?",
+      "options": ["global", "public", "outer", "modify"],
+      "correctIndices": [0],
+      "explanation": "Ключевое слово global сообщает интерпретатору, что имя относится к глобальной области видимости."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-6-4-1",
+      "type": "code",
+      "title": "Задание 1: Расчёт скидки в функции",
+      "instruction": "Напишите функцию `calc_discount(price, percent)`, которая вычисляет сумму скидки по формуле `price * percent // 100` в локальной переменной `discount` и возвращает её с помощью `return discount`.\n\nСчитайте с клавиатуры два целых числа (`price` и `percent`) по одному на строке, вызовите функцию и выведите сумму скидки.\n\n*Пример ввода:*\n`1000`\n`15`\n*Вывод:*\n`150`",
+      "difficulty": "easy",
+      "starterCode": "# Напишите calc_discount(price, percent), считайте числа и напечатайте результат\n",
+      "solutionCode": "def calc_discount(price, percent):\n    discount = price * percent // 100\n    return discount\n\np = int(input())\nperc = int(input())\nprint(calc_discount(p, perc))\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "def calc_discount(price, percent): discount = price * percent // 100 return discount",
+        "Считайте p = int(input()) и perc = int(input()).",
+        "Напечатайте результат вызова calc_discount(p, perc)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-4-1-1",
+          "stdin": "1000\n15\n",
+          "expectedStdout": "150\n",
+          "description": "15% от 1000 = 150",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-4-1-2",
+          "stdin": "500\n10\n",
+          "expectedStdout": "50\n",
+          "description": "10% от 500 = 50",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-4-2",
+      "type": "code",
+      "title": "Задание 2: Глобальный счётчик очков",
+      "instruction": "В программе уже объявлена глобальная переменная `score = 0`.\nРеализуйте функцию `add_points(pts)`, которая с помощью ключевого слова `global` увеличивает глобальную переменную `score` на значение `pts`.\n\nСчитайте одно целое число с клавиатуры, передайте его в `add_points()`, а затем напечатайте итоговое значение `score`.\n\n*Пример ввода:*\n`25`\n*Вывод:*\n`25`",
+      "difficulty": "easy",
+      "starterCode": "score = 0\n\n# Реализуйте add_points(pts), используя global score:\n",
+      "solutionCode": "score = 0\n\ndef add_points(pts):\n    global score\n    score += pts\n\nn = int(input())\nadd_points(n)\nprint(score)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Внутри функции первой строкой укажите: global score.",
+        "Затем увеличьте: score += pts.",
+        "Считайте число, вызовите add_points(n) и напечатайте print(score)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-4-2-1",
+          "stdin": "25\n",
+          "expectedStdout": "25\n",
+          "description": "Прибавление 25 очков",
+          "isHidden": false
+        },
+        {
+          "id": "tc-6-4-2-2",
+          "stdin": "100\n",
+          "expectedStdout": "100\n",
+          "description": "Прибавление 100 очков",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-4-3",
+      "type": "find_error",
+      "title": "Задание 3: Спасение локальной переменной",
+      "instruction": "Код падает с ошибкой `NameError: name 'secret' is not defined`, потому что переменная `secret` остаётся запертой внутри функции. Исправьте код: сохраните результат вызова функции `get_secret()` в переменную снаружи и выведите её!",
+      "difficulty": "easy",
+      "starterCode": "def get_secret():\n    secret = 777\n    return secret\n\nget_secret()\n# Исправьте эту строку (secret не существует снаружи):\nprint(secret)\n",
+      "solutionCode": "def get_secret():\n    secret = 777\n    return secret\n\nsecret = get_secret()\nprint(secret)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Присвойте возвращённое значение переменной: secret = get_secret() или сразу print(get_secret())."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-4-3-1",
+          "stdin": "",
+          "expectedStdout": "777\n",
+          "description": "Получение значения из функции",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-4-4",
+      "type": "predict_output",
+      "title": "Задание 4: Изменилась ли глобальная переменная?",
+      "instruction": "Что выведет команда `print(val)` в самом конце выполнения?",
+      "difficulty": "easy",
+      "starterCode": "val = 50\n\ndef update():\n    val = 100\n\nupdate()\nprint(val)",
+      "solutionCode": "50",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "В функции update() нет команды global val.",
+        "Поэтому строчка val = 100 создала локальную переменную val внутри функции.",
+        "Глобальный val остался равен 50."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-4-4-1",
+          "stdin": "",
+          "expectedStdout": "50\n",
+          "description": "Значение глобальной переменной",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-6-4-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Ключевое слово доступа",
+      "instruction": "Заполните пропуск ключевым словом, чтобы функция могла перезаписать глобальную переменную `balance`.",
+      "difficulty": "easy",
+      "starterCode": "balance = 100\ndef spend(amount):\n    ______ balance\n    balance -= amount\n\nspend(30)\nprint(balance)",
+      "solutionCode": "balance = 100\ndef spend(amount):\n    global balance\n    balance -= amount\n\nspend(30)\nprint(balance)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Используйте ключевое слово global."
+      ],
+      "testCases": [
+        {
+          "id": "tc-6-4-5-1",
+          "stdin": "",
+          "expectedStdout": "70\n",
+          "description": "Изменение баланса через global",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

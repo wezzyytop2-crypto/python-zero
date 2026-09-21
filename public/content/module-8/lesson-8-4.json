@@ -1,0 +1,208 @@
+{
+  "id": "lesson-8-4",
+  "moduleId": "module-8",
+  "title": "Итоговый мини-проект: текстовая игра-квест",
+  "description": "Кульминация всего курса: собираем воедино циклы, условия, списки, словари и функции для создания захватывающей консольной текстовой RPG-игры!",
+  "estimatedMinutes": 45,
+  "stepikLessonUrl": "https://stepik.org/lesson/265114/step/1",
+
+  "theoryMarkdown": "# Твой шедевр: Консольная RPG-игра\n\nПоздравляем! Ты прошёл путь от первой команды `print(\"Привет, мир!\")` до уверенного владения функциями, циклами, списками и словарями.\n\nТеперь пришло время объединить все эти кусочки пазла в настоящий **готовый проект** — текстовую ролевую игру (Quest RPG)!\n\n---\n\n## Архитектура текстовой игры\n\nЛюбая игра состоит из трёх китов:\n\n### 1. Состояние игрока (Player State)\nСловарь идеально подходит для хранения всех характеристик персонажа:\n```python\nhero = {\n    \"name\": \"Странник\",\n    \"hp\": 100,\n    \"atk\": 15,\n    \"gold\": 0,\n    \"inventory\": [\"Зелье лечения\"]\n}\n```\n\n### 2. Функции действий (Game Actions)\nВместо огромного монолитного кода мы разбиваем игру на аккуратные функции:\n- `show_status(hero)` — показать здоровье, золото и инвентарь.\n- `heal(hero)` — выпить зелье и восстановить здоровье.\n- `battle(hero, monster_hp, monster_atk)` — провести пошаговый бой.\n\n### 3. Главный игровой цикл (Game Loop)\nБесконечный цикл `while True:`, который опрашивает действия игрока, пока здоровье больше 0:\n```python\nwhile hero[\"hp\"] > 0:\n    cmd = input(\"Куда идём? (вперёд/инвентарь/выход): \").lower()\n    if cmd == \"выход\":\n        print(\"Игра окончена. До встречи!\")\n        break\n    # ... обработка других команд\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-8-4-1",
+      "title": "Пример 1: Карточка персонажа",
+      "description": "Форматированный вывод статуса игрока через функцию.",
+      "code": "def show_stats(player):\n    print(\"=\" * 25)\n    print(f\"Герой: {player['name']}\")\n    print(f\"Здоровье: {player['hp']} HP\")\n    print(f\"Золото: {player['gold']} монет\")\n    print(f\"Инвентарь: {', '.join(player['inventory'])}\")\n    print(\"=\" * 25)\n\nhero = {\"name\": \"Артур\", \"hp\": 100, \"gold\": 50, \"inventory\": [\"Меч\", \"Факел\"]}\nshow_stats(hero)"
+    },
+    {
+      "id": "ex-8-4-2",
+      "title": "Пример 2: Пошаговая битва с гоблином",
+      "description": "Игровой цикл боя до победы или поражения.",
+      "code": "hero_hp = 50\ngoblin_hp = 30\n\nround_num = 1\nwhile hero_hp > 0 and goblin_hp > 0:\n    print(f\"--- Раунд {round_num} ---\")\n    goblin_hp -= 15  # удар героя\n    print(f\"Герой нанёс 15 урона! У гоблина осталось {max(0, goblin_hp)} HP\")\n    if goblin_hp <= 0:\n        print(\"Гоблин повержен! 🏆\")\n        break\n    hero_hp -= 10   # ответный удар\n    print(f\"Гоблин ответил ударом на 10! У героя {hero_hp} HP\")\n    round_num += 1"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "while hero[\"hp\"] > 0:\n    print(\"Вы в подземелье\")\n    # Забыли input() или break!",
+      "errorType": "InfiniteLoop",
+      "explanation": "Если в игровом цикле не спрашивать ввод у игрока и не менять состояние, цикл станет бесконечным!",
+      "fixCode": "while hero[\"hp\"] > 0:\n    choice = input(\"Ваше действие: \")\n    if choice == \"выход\":\n        break"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-8-4-1",
+      "question": "Какая структура данных Python лучше всего подходит для хранения характеристик персонажа (имя, здоровье, золото)?",
+      "options": ["Словарь (dict)", "Множество (set)", "Кортеж (tuple)", "Строка (str)"],
+      "correctIndices": [0],
+      "explanation": "Словарь (dict) идеален благодаря парам ключ-значение ('hp': 100, 'gold': 50)."
+    },
+    {
+      "id": "q-8-4-2",
+      "question": "Какая конструкция лежит в основе любого игрового движка (Game Loop)?",
+      "options": [
+        "Цикл (например, while) с проверкой условия продолжения игры",
+        "Блок try-except без циклов",
+        "Только вызов print",
+        "Импорт модуля math"
+      ],
+      "correctIndices": [0],
+      "explanation": "Игровой цикл (Game Loop) постоянно повторяется до тех пор, пока игра не завершится победой, поражением или выходом."
+    },
+    {
+      "id": "q-8-4-3",
+      "question": "Зачем разделять логику игры на отдельные функции (show_status, battle, heal)?",
+      "options": [
+        "Чтобы код был структурированным, понятным и его было легко тестировать и развивать",
+        "Без этого Python не запустит файл",
+        "Чтобы расходовать больше оперативной памяти",
+        "Функции требуются только для 3D-графики"
+      ],
+      "correctIndices": [0],
+      "explanation": "Декомпозиция на функции делает код модульным, поддерживаемым и чистым."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-8-4-1",
+      "type": "code",
+      "title": "Задание 1: Подбор трофеев (Loot System)",
+      "instruction": "Реализуйте функцию `pick_loot(player, item_name, coins)`, которая:\n1. Добавляет строку `item_name` в список инвентаря игрока: `player[\"inventory\"].append(...)`\n2. Увеличивает `player[\"gold\"]` на количество найденных монет `coins`.\n\nНачальный словарь игрока уже задан:\n`hero = {\"name\": \"Рыцарь\", \"gold\": 0, \"inventory\": []}`\n\nСчитайте с клавиатуры название предмета и количество монет (целое число), вызовите `pick_loot(hero, item, coins)` и выведите словарь `hero` с помощью `print(hero)`.\n\n*Пример ввода:*\n`Щит`\n`50`\n*Вывод:*\n`{'name': 'Рыцарь', 'gold': 50, 'inventory': ['Щит']}`",
+      "difficulty": "medium",
+      "starterCode": "hero = {\"name\": \"Рыцарь\", \"gold\": 0, \"inventory\": []}\n\n# Реализуйте функцию pick_loot(player, item_name, coins):\n",
+      "solutionCode": "hero = {\"name\": \"Рыцарь\", \"gold\": 0, \"inventory\": []}\n\ndef pick_loot(player, item_name, coins):\n    player[\"inventory\"].append(item_name)\n    player[\"gold\"] += coins\n\nitem = input()\ncoins = int(input())\npick_loot(hero, item, coins)\nprint(hero)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "def pick_loot(player, item_name, coins):",
+        "player['inventory'].append(item_name)",
+        "player['gold'] += coins",
+        "Считайте item = input() и coins = int(input()), затем вызовите функцию."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-4-1-1",
+          "stdin": "Щит\n50\n",
+          "expectedStdout": "{'name': 'Рыцарь', 'gold': 50, 'inventory': ['Щит']}\n",
+          "description": "Добавление щита и 50 золотых",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-4-1-2",
+          "stdin": "Зелье\n10\n",
+          "expectedStdout": "{'name': 'Рыцарь', 'gold': 10, 'inventory': ['Зелье']}\n",
+          "description": "Добавление зелья и 10 золотых",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-4-2",
+      "type": "code",
+      "title": "Задание 2: Счётчик ударов для победы",
+      "instruction": "Программа считывает два целых числа: здоровье босса `boss_hp` и урон героя `hero_atk` за один удар.\nС помощью цикла `while boss_hp > 0:` посчитайте, сколько ровно ударов понадобится герою, чтобы победить босса, и выведите количество ударов.\n\n*Пример ввода:*\n`100`\n`30`\n*Вывод:*\n`4` (удары: 100-30=70, 70-30=40, 40-30=10, 10-30 <= 0)",
+      "difficulty": "easy",
+      "starterCode": "# Считайте boss_hp и hero_atk и определите количество ударов\n",
+      "solutionCode": "boss_hp = int(input())\nhero_atk = int(input())\nhits = 0\nwhile boss_hp > 0:\n    boss_hp -= hero_atk\n    hits += 1\nprint(hits)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Заведите счётчик: hits = 0.",
+        "Цикл: while boss_hp > 0: boss_hp -= hero_atk hits += 1",
+        "После цикла: print(hits)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-4-2-1",
+          "stdin": "100\n30\n",
+          "expectedStdout": "4\n",
+          "description": "Босс 100 HP, урон 30 -> 4 удара",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-4-2-2",
+          "stdin": "50\n50\n",
+          "expectedStdout": "1\n",
+          "description": "Один удар 50 HP",
+          "isHidden": false
+        },
+        {
+          "id": "tc-8-4-2-3",
+          "stdin": "10\n3\n",
+          "expectedStdout": "4\n",
+          "description": "10 HP, урон 3 -> 4 удара",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-8-4-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте зацикливание боя",
+      "instruction": "В цикле боя разработчик забыл отнимать здоровье у врага, из-за чего цикл стал бесконечным. Добавьте уменьшение здоровья `enemy_hp -= 10` внутри цикла!",
+      "difficulty": "easy",
+      "starterCode": "enemy_hp = 30\nrounds = 0\nwhile enemy_hp > 0:\n    rounds += 1\n    # Добавьте уменьшение enemy_hp на 10:\n\nprint(\"Раундов:\", rounds)\n",
+      "solutionCode": "enemy_hp = 30\nrounds = 0\nwhile enemy_hp > 0:\n    rounds += 1\n    enemy_hp -= 10\n\nprint(\"Раундов:\", rounds)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Внутри цикла напишите: enemy_hp -= 10."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-4-3-1",
+          "stdin": "",
+          "expectedStdout": "Раундов: 3\n",
+          "description": "3 раунда боя",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-4-4",
+      "type": "predict_output",
+      "title": "Задание 4: Кто победил?",
+      "instruction": "Что напечатает следующая программа?",
+      "difficulty": "easy",
+      "starterCode": "player_hp = 20\nif player_hp > 0:\n    print(\"Победа!\")\nelse:\n    print(\"Поражение\")",
+      "solutionCode": "Победа!",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "player_hp = 20, что больше нуля.",
+        "Выполнится ветка if и напечатает 'Победа!'."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-4-4-1",
+          "stdin": "",
+          "expectedStdout": "Победа!\n",
+          "description": "Вывод Победа!",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-8-4-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Условие жизни героя",
+      "instruction": "Заполните пропуск знаком сравнения, чтобы игровой цикл продолжался ПОКА здоровье героя больше 0.",
+      "difficulty": "easy",
+      "starterCode": "hp = 10\nwhile hp ___ 0:\n    hp -= 5\nprint(\"Конец боя\")",
+      "solutionCode": "hp = 10\nwhile hp > 0:\n    hp -= 5\nprint(\"Конец боя\")",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Условие 'больше' записывается знаком >."
+      ],
+      "testCases": [
+        {
+          "id": "tc-8-4-5-1",
+          "stdin": "",
+          "expectedStdout": "Конец боя\n",
+          "description": "Проверка знака >",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

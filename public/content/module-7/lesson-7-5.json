@@ -1,0 +1,211 @@
+{
+  "id": "lesson-7-5",
+  "moduleId": "module-7",
+  "title": "Чтение и запись файлов: open() и with",
+  "description": "Постоянное хранение данных: как открывать файлы функцией open(), режимы 'r', 'w', 'a', кодировка utf-8, надёжный менеджер контекста with и построчное чтение.",
+  "estimatedMinutes": 25,
+  "stepikLessonUrl": "https://stepik.org/lesson/265110/step/1",
+
+  "theoryMarkdown": "# Вечная память: Чтение и запись файлов\n\nВсе переменные, списки и словари, которые мы создавали до сих пор, жили только в оперативной памяти компьютера. Стоит закрыть вкладку браузера или выключить программу — и все данные бесследно исчезают.\n\nЧтобы сохранить данные навсегда, их записывают в **текстовые файлы на диск**!\n\n---\n\n## 1. Режимы работы с файлами\n\nФайлы открываются функцией `open(имя_файла, режим, encoding=\"utf-8\")`:\n\n- **`'r'` (Read — Чтение):** файл открывается только для чтения. Если файла не существует, возникнет ошибка `FileNotFoundError`.\n- **`'w'` (Write — Запись):** создаёт новый файл или **полностью перезаписывает существующий** (все старые данные стираются!).\n- **`'a'` (Append — Дозапись):** новые строки дописываются в самый конец файла, сохраняя всё, что было раньше.\n\n> 💡 **Кодировка `utf-8`:** Всегда указывайте параметр `encoding=\"utf-8\"`, чтобы русский текст отображался правильно и без «кракозябр».\n\n---\n\n## 2. Менеджер контекста `with` — золотой стандарт Python\n\nРаньше после работы с файлом программисты были обязаны вручную вызывать `f.close()`. Если забыть это сделать, файл может заблокироваться или данные не сохранятся на диск.\n\nКонструкция **`with`** гарантирует, что файл **автоматически закроется сам**, даже если в программе произойдёт непредвиденная ошибка:\n\n```python\n# Запись в файл\nwith open(\"notes.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Первая строка текста\\n\")\n    f.write(\"Вторая строка текста\\n\")\n\n# Чтение из файла\nwith open(\"notes.txt\", \"r\", encoding=\"utf-8\") as f:\n    content = f.read()\n    print(content)\n```\n\n---\n\n## 3. Построчное чтение файлов\n\nЕсли файл очень большой (миллионы строк), не читайте его целиком через `f.read()`. Гораздо быстрее и экономнее обходить файл построчно в цикле `for`:\n```python\nwith open(\"notes.txt\", \"r\", encoding=\"utf-8\") as f:\n    for line in f:\n        print(line.strip())  # strip удаляет лишний перевод строки\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-7-5-1",
+      "title": "Пример 1: Создание и чтение файла",
+      "description": "Записываем приветствие в файл и считываем его обратно.",
+      "code": "with open(\"hello.txt\", \"w\", encoding=\"utf-8\") as file:\n    file.write(\"Привет из текстового файла!\\nPython сохранил эти данные.\")\n\nwith open(\"hello.txt\", \"r\", encoding=\"utf-8\") as file:\n    text = file.read()\n    print(\"Содержимое файла:\\n\" + text)"
+    },
+    {
+      "id": "ex-7-5-2",
+      "title": "Пример 2: Дозапись логов в режиме 'a'",
+      "description": "Добавляем новые записи в конец файла без удаления старых.",
+      "code": "with open(\"log.txt\", \"a\", encoding=\"utf-8\") as log:\n    log.write(\"Событие: вход в систему\\n\")\n\nwith open(\"log.txt\", \"r\", encoding=\"utf-8\") as log:\n    print(log.read())"
+    },
+    {
+      "id": "ex-7-5-3",
+      "title": "Пример 3: Построчная сумма чисел из файла",
+      "description": "Считываем строки с числами и суммируем их.",
+      "code": "with open(\"scores.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"10\\n25\\n15\\n\")\n\ntotal = 0\nwith open(\"scores.txt\", \"r\", encoding=\"utf-8\") as f:\n    for line in f:\n        total += int(line.strip())\nprint(\"Итоговая сумма:\", total)"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "with open(\"data.txt\", \"w\") as f:\n    text = f.read()",
+      "errorType": "UnsupportedOperation",
+      "explanation": "Файл открыт в режиме записи 'w', поэтому читать из него нельзя! Для чтения открывайте в режиме 'r': open('data.txt', 'r').",
+      "fixCode": "with open(\"data.txt\", \"r\") as f:\n    text = f.read()"
+    },
+    {
+      "mistakeCode": "f = open(\"test.txt\", \"w\")\nf.write(\"текст\")\n# Забыли f.close()!",
+      "errorType": "ResourceLeak",
+      "explanation": "Без закрытия файла данные могут остаться в буфере и не записаться на диск. Всегда используйте конструкцию 'with open(...) as f:' — она закрывает файлы автоматически.",
+      "fixCode": "with open(\"test.txt\", \"w\") as f:\n    f.write(\"текст\")"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-7-5-1",
+      "question": "В чём главное преимущество использования менеджера контекста with open(...) as f:?",
+      "options": [
+        "Файл автоматически гарантированно закрывается при выходе из блока with",
+        "Файл шифруется паролем",
+        "Программа начинает работать в 10 раз быстрее",
+        "with работает без операционной системы"
+      ],
+      "correctIndices": [0],
+      "explanation": "with гарантирует корректное и своевременное закрытие файлового дескриптора даже в случае ошибок."
+    },
+    {
+      "id": "q-7-5-2",
+      "question": "Что произойдёт с файлом, если открыть его в режиме 'w', когда в нём уже был записан текст?",
+      "options": [
+        "Все старые данные будут полностью стёрты и перезаписаны заново",
+        "Новые данные допишутся в конец файла",
+        "Возникнет ошибка FileExistsError",
+        "Создастся резервная копия файла"
+      ],
+      "correctIndices": [0],
+      "explanation": "Режим 'w' (write) очищает существующий файл до нуля. Чтобы сохранить старые данные, используют режим 'a' (append)."
+    },
+    {
+      "id": "q-7-5-3",
+      "question": "Зачем в функцию open передают параметр encoding='utf-8'?",
+      "options": [
+        "Чтобы русский текст и спецсимволы читались корректно без искажений",
+        "Это делает файл доступным в интернете",
+        "Для сжатия файла в zip-архив",
+        "Параметр является обязательным по стандарту PEP 8"
+      ],
+      "correctIndices": [0],
+      "explanation": "Кодировка utf-8 — общепринятый мировой стандарт для корректного отображения любых алфавитов мира, включая кириллицу."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-7-5-1",
+      "type": "code",
+      "title": "Задание 1: Запись и чтение строки",
+      "instruction": "Программа считывает с клавиатуры одну строку текста.\n1. Откройте файл `\"output.txt\"` в режиме записи (`'w'`) с `encoding=\"utf-8\"` и запишите в него эту строку с помощью метода `.write()`.\n2. Затем откройте этот же файл в режиме чтения (`'r'`), прочитайте содержимое методом `.read()` и выведите его на экран командой `print(data)`.\n\n*Пример ввода:*\n`Привет, файл!`\n*Вывод:*\n`Привет, файл!`",
+      "difficulty": "easy",
+      "starterCode": "# Запишите считанную строку в output.txt, а затем прочитайте и выведите её\n",
+      "solutionCode": "text = input()\nwith open(\"output.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(text)\n\nwith open(\"output.txt\", \"r\", encoding=\"utf-8\") as f:\n    data = f.read()\n    print(data)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте строку: text = input().",
+        "with open('output.txt', 'w', encoding='utf-8') as f: f.write(text)",
+        "with open('output.txt', 'r', encoding='utf-8') as f: print(f.read())"
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-5-1-1",
+          "stdin": "Привет, файл!\n",
+          "expectedStdout": "Привет, файл!\n",
+          "description": "Запись и чтение строки",
+          "isHidden": false
+        },
+        {
+          "id": "tc-7-5-1-2",
+          "stdin": "Python 3\n",
+          "expectedStdout": "Python 3\n",
+          "description": "Текст Python 3",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-5-2",
+      "type": "code",
+      "title": "Задание 2: Сумма чисел из файла",
+      "instruction": "В начале программы для вас уже создан файл `\"numbers.txt\"` с несколькими числами.\nОткройте файл `\"numbers.txt\"` в режиме чтения (`'r'`), обойдите его строки в цикле `for line in f:`, сложите все целые числа из строк файла и выведите их общую сумму.\n\n*Начальный код уже создаёт тестовый файл.*",
+      "difficulty": "medium",
+      "starterCode": "# Создаём тестовый файл numbers.txt:\nwith open(\"numbers.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"10\\n20\\n30\\n40\\n\")\n\n# Ваш код: откройте numbers.txt, сложите числа и выведите сумму\n",
+      "solutionCode": "with open(\"numbers.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"10\\n20\\n30\\n40\\n\")\n\ntotal = 0\nwith open(\"numbers.txt\", \"r\", encoding=\"utf-8\") as f:\n    for line in f:\n        total += int(line.strip())\nprint(total)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Заведите total = 0.",
+        "Используйте: with open('numbers.txt', 'r', encoding='utf-8') as f:",
+        "Внутри цикла: for line in f: total += int(line.strip())",
+        "Напечатайте print(total)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-5-2-1",
+          "stdin": "",
+          "expectedStdout": "100\n",
+          "description": "Сумма чисел 10 + 20 + 30 + 40 = 100",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-5-3",
+      "type": "find_error",
+      "title": "Задание 3: Исправьте режим чтения",
+      "instruction": "Программа должна прочитать файл, но открыла его в режиме записи `'w'`, что привело к ошибке `UnsupportedOperation: not readable`. Замените режим открытия на `'r'`!",
+      "difficulty": "easy",
+      "starterCode": "with open(\"test.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Успех!\")\n\n# Исправьте 'w' на 'r' для чтения:\nwith open(\"test.txt\", \"w\", encoding=\"utf-8\") as f:\n    print(f.read())\n",
+      "solutionCode": "with open(\"test.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Успех!\")\n\nwith open(\"test.txt\", \"r\", encoding=\"utf-8\") as f:\n    print(f.read())\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Во втором блоке with замените режим 'w' на 'r'."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-5-3-1",
+          "stdin": "",
+          "expectedStdout": "Успех!\n",
+          "description": "Чтение в режиме r",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-5-4",
+      "type": "predict_output",
+      "title": "Задание 4: Что окажется в файле?",
+      "instruction": "Определите, что выведет следующий фрагмент кода:",
+      "difficulty": "easy",
+      "starterCode": "with open(\"abc.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"А\")\n    f.write(\"Б\")\n\nwith open(\"abc.txt\", \"r\", encoding=\"utf-8\") as f:\n    print(f.read())",
+      "solutionCode": "АБ",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Команда f.write() не переводит строку автоматически (в отличие от print).",
+        "Поэтому буквы запишутся вплотную друг к другу: 'АБ'."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-5-4-1",
+          "stdin": "",
+          "expectedStdout": "АБ\n",
+          "description": "Запись букв А и Б",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-7-5-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Менеджер контекста",
+      "instruction": "Заполните пропуск ключевым словом, открывающим блок безопасного менеджера контекста.",
+      "difficulty": "easy",
+      "starterCode": "____ open(\"save.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"100%\")",
+      "solutionCode": "with open(\"save.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"100%\")",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Менеджер контекста открывается словом with."
+      ],
+      "testCases": [
+        {
+          "id": "tc-7-5-5-1",
+          "stdin": "",
+          "expectedStdout": "",
+          "description": "Проверка конструкции with",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

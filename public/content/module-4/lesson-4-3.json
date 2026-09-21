@@ -1,0 +1,218 @@
+{
+  "id": "lesson-4-3",
+  "moduleId": "module-4",
+  "title": "Цикл for и волшебная функция range()",
+  "description": "Самый любимый цикл программистов на Python: автоматический перебор чисел без риска забыть счётчик. Разбираем range(stop), range(start, stop) и range(start, stop, step).",
+  "estimatedMinutes": 20,
+  "stepikLessonUrl": "https://stepik.org/lesson/265093/step/1",
+
+  "theoryMarkdown": "# Цикл for и волшебная функция range()\n\nВ цикле `while` нам приходилось вручную создавать переменную-счётчик (`i = 1`), писать условие (`i <= 5`) и не забывать увеличивать её (`i += 1`).\n\nНо в 90% задач мы заранее знаем, сколько раз хотим повторить действие. Для таких случаев в Python создан великолепный цикл **`for`** в связке с генератором чисел **`range()`**!\n\n> 💡 **Аналогия:** Цикл `for` — это конвейер на фабрике. Функция `range()` кладёт на ленту коробки с номерами по порядку, а цикл `for` берёт каждую коробку по очереди и передаёт вам в руки.\n\n---\n\n## Три формы функции range()\n\nФункция `range()` генерирует последовательность целых чисел. Она умеет работать с 1, 2 или 3 аргументами:\n\n### 1. `range(stop)` — с одним параметром\nГенерирует числа **от 0 до stop, не включая stop**!\n```python\nfor i in range(4):\n    print(i)  # Напечатает: 0, 1, 2, 3 (ровно 4 числа)\n```\n*Важнейшее правило:* правая граница в Python **всегда не включается**!\n\n### 2. `range(start, stop)` — с двумя параметрами\nГенерирует числа **от start до stop, не включая stop**.\n```python\nfor i in range(1, 5):\n    print(i)  # Напечатает: 1, 2, 3, 4\n```\n\n### 3. `range(start, stop, step)` — с тремя параметрами\nТретий параметр — это **шаг** (на сколько увеличивать число на каждой итерации):\n```python\nfor i in range(1, 10, 2):\n    print(i)  # Нечётные числа: 1, 3, 5, 7, 9\n```\n\n### Шаг может быть отрицательным!\nЕсли нужно идти в обратную сторону (от большего к меньшему), указываем отрицательный шаг:\n```python\nfor i in range(5, 0, -1):\n    print(i)  # 5, 4, 3, 2, 1\n```",
+
+  "theoryExamples": [
+    {
+      "id": "ex-4-3-1",
+      "title": "Пример 1: Повторение фразы 3 раза",
+      "description": "Когда нам просто нужно выполнить действие несколько раз.",
+      "code": "for _ in range(3):\n    print(\"Python — это просто и весело!\")"
+    },
+    {
+      "id": "ex-4-3-2",
+      "title": "Пример 2: Чётные числа от 2 до 10",
+      "description": "Используем range с начальным значением 2, концом 11 и шагом 2.",
+      "code": "for num in range(2, 11, 2):\n    print(f\"Чётное число: {num}\")"
+    },
+    {
+      "id": "ex-4-3-3",
+      "title": "Пример 3: Вычисление суммы чисел от 1 до N",
+      "description": "Суммируем числа в цикле for без ручного счётчика.",
+      "code": "n = 5\ntotal = 0\nfor i in range(1, n + 1):\n    total += i\nprint(f\"Сумма чисел от 1 до {n}: {total}\")"
+    }
+  ],
+
+  "commonMistakes": [
+    {
+      "mistakeCode": "for i in range(1, 5):\n    print(i)\n# Автор ожидал увидеть числа 1, 2, 3, 4, 5",
+      "errorType": "OffByOneError",
+      "explanation": "Правая граница range() не включается! Чтобы включить 5, нужно написать range(1, 6).",
+      "fixCode": "for i in range(1, 6):\n    print(i)"
+    },
+    {
+      "mistakeCode": "for i in range(5, 1):\n    print(i)",
+      "errorType": "EmptyRange",
+      "explanation": "По умолчанию шаг равен +1. При старте 5 шаг +1 удаляется от 1, поэтому цикл ничего не напечатает. Для счёта назад нужен шаг -1: range(5, 1, -1).",
+      "fixCode": "for i in range(5, 1, -1):\n    print(i)"
+    }
+  ],
+
+  "quiz": [
+    {
+      "id": "q-4-3-1",
+      "question": "Какие числа выдаст вызов range(3)?",
+      "options": ["1, 2, 3", "0, 1, 2", "0, 1, 2, 3", "1, 2"],
+      "correctIndices": [1],
+      "explanation": "range(3) начинает с 0 и делает 3 шага: 0, 1, 2 (граница 3 не включается)."
+    },
+    {
+      "id": "q-4-3-2",
+      "question": "Как получить числа 10, 20, 30, 40, 50 с помощью range?",
+      "options": [
+        "range(10, 50, 10)",
+        "range(10, 51, 10)",
+        "range(10, 60, 5)",
+        "range(50, 10)"
+      ],
+      "correctIndices": [1],
+      "explanation": "range(10, 51, 10) стартует с 10, идёт с шагом 10 и останавливается до 51, то есть выдаст 10, 20, 30, 40, 50."
+    },
+    {
+      "id": "q-4-3-3",
+      "question": "Что выведет цикл for i in range(10, 5): print(i)?",
+      "options": ["Числа от 10 до 6", "Ошибку ValueError", "Ничего не выведет", "Числа от 5 до 10"],
+      "correctIndices": [2],
+      "explanation": "Так как шаг по умолчанию +1, а начало (10) больше конца (5), диапазон пуст, тело цикла не выполнится ни разу."
+    }
+  ],
+
+  "tasks": [
+    {
+      "id": "task-4-3-1",
+      "type": "code",
+      "title": "Задание 1: Диапазон от A до B",
+      "instruction": "С клавиатуры вводятся два целых числа `A` и `B` (по одному на строку), причём `A <= B`.\nВыведите все целые числа от `A` до `B` включительно, каждое на отдельной строке.\n\n*Пример ввода:*\n`3`\n`6`\n*Вывод:*\n`3`\n`4`\n`5`\n`6`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте A и B и выведите числа от A до B включительно\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nfor i in range(a, b + 1):\n    print(i)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте два числа: a = int(input()) и b = int(input()).",
+        "Чтобы включить число b в диапазон, укажите b + 1 в качестве правой границы: range(a, b + 1).",
+        "Внутри цикла напишите: print(i)."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-3-1-1",
+          "stdin": "3\n6\n",
+          "expectedStdout": "3\n4\n5\n6\n",
+          "description": "Диапазон от 3 до 6",
+          "isHidden": false
+        },
+        {
+          "id": "tc-4-3-1-2",
+          "stdin": "5\n5\n",
+          "expectedStdout": "5\n",
+          "description": "A равно B",
+          "isHidden": false
+        },
+        {
+          "id": "tc-4-3-1-3",
+          "stdin": "-2\n2\n",
+          "expectedStdout": "-2\n-1\n0\n1\n2\n",
+          "description": "Отрицательный диапазон",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "task-4-3-2",
+      "type": "code",
+      "title": "Задание 2: Таблица умножения на N",
+      "instruction": "Напишите программу, которая считывает число `N` и выводит таблицу умножения для этого числа от 1 до 10 в формате `N * i = результат`.\n\n*Пример для N = 7:*\n`7 * 1 = 7`\n`7 * 2 = 14`\n...\n`7 * 10 = 70`",
+      "difficulty": "easy",
+      "starterCode": "# Считайте N и выведите таблицу умножения от 1 до 10\n",
+      "solutionCode": "n = int(input())\nfor i in range(1, 11):\n    print(f\"{n} * {i} = {n * i}\")\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Считайте n = int(input()).",
+        "Запустите цикл for i in range(1, 11): (от 1 до 10 включительно).",
+        "Для вывода используйте f-строку: print(f\"{n} * {i} = {n * i}\")."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-3-2-1",
+          "stdin": "7\n",
+          "expectedStdout": "7 * 1 = 7\n7 * 2 = 14\n7 * 3 = 21\n7 * 4 = 28\n7 * 5 = 35\n7 * 6 = 42\n7 * 7 = 49\n7 * 8 = 56\n7 * 9 = 63\n7 * 10 = 70\n",
+          "description": "Таблица для 7",
+          "isHidden": false
+        },
+        {
+          "id": "tc-4-3-2-2",
+          "stdin": "2\n",
+          "expectedStdout": "2 * 1 = 2\n2 * 2 = 4\n2 * 3 = 6\n2 * 4 = 8\n2 * 5 = 10\n2 * 6 = 12\n2 * 7 = 14\n2 * 8 = 16\n2 * 9 = 18\n2 * 10 = 20\n",
+          "description": "Таблица для 2",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-3-3",
+      "type": "find_error",
+      "title": "Задание 3: Включить число 10",
+      "instruction": "Программа должна напечатать чётные числа от 2 до 10 включительно (`2 4 6 8 10`), но останавливается на 8. Исправьте ошибку в границе `range`!",
+      "difficulty": "easy",
+      "starterCode": "# Исправьте правую границу range\nfor i in range(2, 10, 2):\n    print(i)\n",
+      "solutionCode": "for i in range(2, 11, 2):\n    print(i)\n",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "range(2, 10, 2) не включает 10, так как правая граница всегда исключается.",
+        "Увеличьте правую границу: укажите 11 или 12 вместо 10."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-3-3-1",
+          "stdin": "",
+          "expectedStdout": "2\n4\n6\n8\n10\n",
+          "description": "Вывод чисел 2, 4, 6, 8, 10",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-3-4",
+      "type": "predict_output",
+      "title": "Задание 4: Сумма произведений",
+      "instruction": "Посчитайте, что выведет данный фрагмент кода, проследив за значениями `s` при каждом значении `i`.",
+      "difficulty": "medium",
+      "starterCode": "s = 0\nfor i in range(1, 4):\n    s += i * 2\nprint(s)",
+      "solutionCode": "12",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "range(1, 4) даёт i = 1, 2, 3.",
+        "При i = 1: s = 0 + 1*2 = 2.",
+        "При i = 2: s = 2 + 2*2 = 6.",
+        "При i = 3: s = 6 + 3*2 = 12."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-3-4-1",
+          "stdin": "",
+          "expectedStdout": "12\n",
+          "description": "Итоговая сумма s",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "task-4-3-5",
+      "type": "fill_blanks",
+      "title": "Задание 5: Обратный шаг",
+      "instruction": "Заполните пропуск значением шага, чтобы цикл вывел обратный отсчёт: 3, затем 2, затем 1.",
+      "difficulty": "easy",
+      "starterCode": "for i in range(3, 0, ___):\n    print(i)",
+      "solutionCode": "for i in range(3, 0, -1):\n    print(i)",
+      "solutionUnlockAttempts": 2,
+      "hints": [
+        "Чтобы двигаться от большего числа к меньшему, шаг должен быть отрицательным.",
+        "Укажите -1."
+      ],
+      "testCases": [
+        {
+          "id": "tc-4-3-5-1",
+          "stdin": "",
+          "expectedStdout": "3\n2\n1\n",
+          "description": "Обратный отсчёт 3, 2, 1",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}
